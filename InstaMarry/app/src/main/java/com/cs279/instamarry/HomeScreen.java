@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+//import com.parse.*;
+
 
 public class HomeScreen extends ActionBarActivity {
 
@@ -12,6 +14,12 @@ public class HomeScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+        /*Parse.enableLocalDatastore(this);
+        Parse.initialize(this, "RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp", "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
+        ParseObject testObject = new ParseObject("hwllo");
+        testObject.put("jason", "sean");
+        testObject.saveInBackground();
+        */
     }
 
 
