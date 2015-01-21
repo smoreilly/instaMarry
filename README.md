@@ -11,7 +11,7 @@ A person can share these items in one of two ways. The easiest is if they find s
 4.	Click the Run button to start an emulator or have a phone connected to run on Android Device
 
 ##Using InstaMarry
-TBD
+Very similar to instagram/twitter/pintrest. Actual idea is evolving!
 
 ##Build Cycles
 1. Create basic navigation, views, activities and fragments.
