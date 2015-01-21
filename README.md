@@ -18,6 +18,7 @@ Very similar to instagram/twitter/pintrest. Actual idea is evolving!
 2. Add features to make functional
 3. Add logins and save state functionality with Parse, login with Facebook etc.
 4. Make the app beautiful 
+5. Beta testings and cleanup
 
 ##Prototype Links
 https://drive.google.com/folderview?id=0B5o9rUXO3ZkeeDlYQnBya0pOM3c&usp=sharing
