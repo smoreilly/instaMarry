@@ -1,12 +1,12 @@
 package com.cs279.instamarry;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.parse.*;
+import android.view.View;
+import android.widget.Button;
 
 
 public class    HomeScreen extends ActionBarActivity {
@@ -15,6 +15,14 @@ public class    HomeScreen extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
+        Button b = (Button) findViewById(R.id.button);
+        b.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(v.getContext(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
        /* Parse.enableLocalDatastore(this);
