@@ -6,7 +6,7 @@ ideal
 ##Description
 ideal is a social network where people can create and share their perfecet partner. Fashion is changing. There is no longer one way that we are supposed to dress. Every person from every background has a different idea of what is important to them. They have a different ideal partner engrained in their mind. ideal helps every person share their interests and build a material view of their ideal partner. 
 
-Users can create their ideal partner in many ways. They can share apparral they find online and add them to their profile. They can browse their friends profiles and add items other people like. They can also find items they like out in the world, snap a picture and add those items to their profile. How we look matters. Create your ideal.
+Users can create their ideal partner in many ways. They can share apparrel they find online and add them to their profile. They can browse their friends profiles and add items other people like. They can also find items they like out in the world, snap a picture and add those items to their profile. How we look matters. Create your ideal.
 
 ##Checkout, Build, and Run
 1.	Download Android Studio at http://developer.android.com/sdk/index.html
