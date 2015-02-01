@@ -24,6 +24,7 @@ import java.util.List;
 
 /**
  * Created by pauljs on 1/28/2015.
+ * Aid from: http://www.java2s.com/Code/Android/UI/ThisdemoillustratestheuseofCHOICEMODEMULTIPLEMODALakaselectionmodeonGridView.htm
  */
 public class FragmentPersonalTab extends Fragment {
     private List<ResolveInfo> mApps;
