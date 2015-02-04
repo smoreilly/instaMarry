@@ -25,7 +25,7 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
 
         // Initialization
         viewPager = (ViewPager) findViewById(R.id.pager);
-        actionBar = getSupportActionBar();
+            actionBar = getSupportActionBar();
         mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mAdapter);
