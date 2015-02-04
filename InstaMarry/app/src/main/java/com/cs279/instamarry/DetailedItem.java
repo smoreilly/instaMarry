@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 
 public class DetailedItem extends ActionBarActivity {
@@ -12,6 +13,8 @@ public class DetailedItem extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_item);
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
+
     }
 
 
