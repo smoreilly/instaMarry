@@ -39,5 +39,5 @@ public class Post {
     public String getMy_description(){
         return my_description;
     }
-    
+
 }
