@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class    HomeScreen extends ActionBarActivity {
+public class HomeScreen extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
