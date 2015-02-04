@@ -8,5 +8,5 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_detailed_item">DetailedItem</string>
-
+    <string name="app_id">1574501699459233</string>
 </resources>
