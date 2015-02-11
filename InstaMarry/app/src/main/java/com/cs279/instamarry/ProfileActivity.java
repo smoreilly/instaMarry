@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.net.Uri;
 
 //http://developer.android.com/training/implementing-navigation/lateral.html#horizontal-paging
 
@@ -19,7 +20,7 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
-    // Tab titles
+    private static int RESULT_GALLERY = 0;
     private String[] tabs = { "Explore", "Personal"};
 
     @Override
@@ -89,15 +90,9 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.add){
-            Log.d("Profile Activity", "Add button workoing");
-            int RESULT_GALLERY = 0;
+            Log.d("Profile Activity", "Add button working");
 
             Intent galleryIntent = new Intent(
                     Intent.ACTION_PICK,
@@ -108,7 +103,17 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != ProfileActivity.RESULT_CANCELED) {
+            if (requestCode == RESULT_GALLERY) {
+                Uri selectedImageUri = data.getData();
+                Log.d("ProfileActivity","image callback");
+
+            }
+        }
     }
 }
