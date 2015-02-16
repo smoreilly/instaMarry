@@ -2,6 +2,8 @@ package com.cs279.instamarry;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,6 +30,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -52,10 +55,13 @@ public class FragmentExploreTab extends Fragment {
     static final String KEY_ARTIST = "artist";
     static final String KEY_DURATION = "duration";
     static final String KEY_THUMB_URL = "thumb_url";
+    static final int VIEW_POST_REQUEST = 1;
+    static final int DELETE_POST_REQUEST = 2;
 
     ListView list;
     LazyAdapter adapter;
     XMLParser parser;
+    private ArrayList<Post> songsList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +72,7 @@ public class FragmentExploreTab extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_explore_tab_layout, container, false);
         list=(ListView) v.findViewById(R.id.exploreListView);
-
+        songsList = new ArrayList<Post>();
         parser = new XMLParser(URL);
         parser.execute(); // getting XML from URL
 
@@ -74,33 +80,55 @@ public class FragmentExploreTab extends Fragment {
         return v;
     }
 
-    public void fillListview() {
-        final ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-        String xml = parser.getXML();
-        Document doc = parser.getDomElement(xml); // getting DOM element
+    public void addPost(Post post) {
+//        HashMap<String, String> map = new HashMap<String, String>();
+//        map.put(KEY_ID, "Test POST");
+//        map.put(KEY_TITLE, "Oh yea");
+//        map.put(KEY_ARTIST, "Ideal");
+//        map.put(KEY_DURATION, "");
+//        Log.i("SELECTED IMAGE", bitmap.toString());
+//        map.put(KEY_THUMB_URL, bitmap.toString());
+//        Post post = new Post("Post ID", "TITLE", "DESCRIPTION", "TIME", "ARTIST", bitmap);
+        songsList.add(post);
+        adapter=new LazyAdapter(getActivity(), songsList);
+        list.setAdapter(adapter);
+    }
 
-        NodeList nl = doc.getElementsByTagName(KEY_SONG);
+    public void fillListview() {
+//        String xml = parser.getXML();
+//        Document doc = parser.getDomElement(xml); // getting DOM element
+////
+//        NodeList nl = doc.getElementsByTagName(KEY_SONG);
         // looping through all song nodes <song>
-        //for (int i = 0; i < nl.getLength(); i++) {
+//        for (int i = 0; i < nl.getLength(); i++) {
             // creating new HashMap
-            HashMap<String, String> map = new HashMap<String, String>();
-            //Element e = (Element) nl.item(i);
+//            HashMap<String, String> map = new HashMap<String, String>();
+//            Element e = (Element) nl.item(i);
             // adding each child node to HashMap key => value
 //            map.put(KEY_ID, parser.getValue(e, KEY_ID));
 //            map.put(KEY_TITLE, parser.getValue(e, KEY_TITLE));
 //            map.put(KEY_ARTIST, parser.getValue(e, KEY_ARTIST));
 //            map.put(KEY_DURATION, parser.getValue(e, KEY_DURATION));
 //            map.put(KEY_THUMB_URL, parser.getValue(e, KEY_THUMB_URL));
-
-            //MY INSERTION
-            map.put(KEY_ID, "Polo Shirt");
-            map.put(KEY_TITLE, "Polo Shirt");
-            map.put(KEY_ARTIST, "This would look great with khakis");
-            map.put(KEY_DURATION, "");
-            map.put(KEY_THUMB_URL, "");
+//            Log.i("TESTING IMAGE", parser.getValue(e, KEY_THUMB_URL));
+//        }
+//        HashMap<String, String> map = new HashMap<String, String>();
+//        Element e = (Element) nl.item(0);
+//        // adding each child node to HashMap key => value
+//            map.put(KEY_ID, parser.getValue(e, KEY_ID));
+//            map.put(KEY_TITLE, parser.getValue(e, KEY_TITLE));
+//            map.put(KEY_ARTIST, parser.getValue(e, KEY_ARTIST));
+//            map.put(KEY_DURATION, parser.getValue(e, KEY_DURATION));
+//            map.put(KEY_THUMB_URL, parser.getValue(e, KEY_THUMB_URL));
+        //MY INSERTION
+//            map.put(KEY_ID, "Polo Shirt");
+//            map.put(KEY_TITLE, "Polo Shirt");
+//            map.put(KEY_ARTIST, "This would look great with khakis");
+//            map.put(KEY_DURATION, "");
+//            map.put(KEY_THUMB_URL, "");
 
             // adding HashList to ArrayList
-            songsList.add(map);
+//            songsList.add(map);
         //}
 
 
@@ -118,9 +146,17 @@ public class FragmentExploreTab extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), DetailedItem.class);
-                startActivity(intent);
+                intent.putExtra("post", adapter.getItem(position));
+                intent.putExtra("position", position);
+                startActivityForResult(intent, VIEW_POST_REQUEST);
             }
         });
+    }
+
+    public void deletePost(int position) {
+        songsList.remove(position);
+        adapter=new LazyAdapter(getActivity(), songsList);
+        list.setAdapter(adapter);
     }
 
     public class XMLParser extends AsyncTask<Void, Void, Void> {
@@ -194,7 +230,7 @@ public class FragmentExploreTab extends Fragment {
 
         /**
          * Getting XML DOM element
-         * @param XML string
+         * @param //XML string
          * */
         public Document getDomElement(String xml){
             Document doc = null;
@@ -240,8 +276,8 @@ public class FragmentExploreTab extends Fragment {
 
         /**
          * Getting node value
-         * @param Element node
-         * @param key string
+         * @param //Element node
+         * @param //key string
          * */
         public String getValue(Element item, String str) {
             NodeList n = item.getElementsByTagName(str);

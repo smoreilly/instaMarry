@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class ImageLoader {
@@ -34,24 +35,27 @@ public class ImageLoader {
     }
     
     final int stub_id = R.drawable.polo;
-    public void DisplayImage(String url, ImageView imageView)
+    public void DisplayImage(String url, ImageView imageView, Bitmap myBitmap)
     {
         imageViews.put(imageView, url);
-        Bitmap bitmap=memoryCache.get(url);
-        //MY INSERTION
-        bitmap = null;
-        if(bitmap!=null)
-            imageView.setImageBitmap(bitmap);
-        else
-        {
-            queuePhoto(url, imageView);
-            imageView.setImageResource(stub_id);
-        }
+        imageView.setImageBitmap(myBitmap);
+//        Bitmap bitmap=memoryCache.get(url);
+//        //MY INSERTION
+////        bitmap = null;
+//        if(bitmap!=null) {
+//            Log.i("BITMAP SUCCESS", "BITMAP SUCCESS");
+//            imageView.setImageBitmap(bitmap);
+//        } else
+//        {
+//            Log.i("BITMAP FAILED", "BITMAP FAILED");
+//            queuePhoto(url, imageView, bitmap);
+//            imageView.setImageResource(stub_id);
+//        }
     }
         
-    private void queuePhoto(String url, ImageView imageView)
+    private void queuePhoto(String url, ImageView imageView, Bitmap bitmap)
     {
-        PhotoToLoad p=new PhotoToLoad(url, imageView);
+        PhotoToLoad p=new PhotoToLoad(url, imageView, bitmap);
         executorService.submit(new PhotosLoader(p));
     }
     
@@ -117,9 +121,16 @@ public class ImageLoader {
     {
         public String url;
         public ImageView imageView;
-        public PhotoToLoad(String u, ImageView i){
+        public Bitmap bitmap;
+
+        public PhotoToLoad(String u, ImageView i, Bitmap bmp){
             url=u; 
             imageView=i;
+            this.bitmap = bmp;
+        }
+
+        public Bitmap getBitmap() {
+            return bitmap;
         }
     }
     
@@ -131,9 +142,13 @@ public class ImageLoader {
         
         @Override
         public void run() {
-            if(imageViewReused(photoToLoad))
+            if(imageViewReused(photoToLoad)) {
+                Log.i("IT FAILED", "WAH");
                 return;
-            Bitmap bmp=getBitmap(photoToLoad.url);
+            }
+//            Bitmap bmp=getBitmap(photoToLoad.url);
+//            MyInsert
+            Bitmap bmp = photoToLoad.getBitmap();
             memoryCache.put(photoToLoad.url, bmp);
             if(imageViewReused(photoToLoad))
                 return;

@@ -1,5 +1,8 @@
 package com.cs279.instamarry;
 
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
@@ -20,9 +23,8 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
-    private static int RESULT_GALLERY = 0;
     private String[] tabs = { "Explore", "Personal"};
-
+    static final int CREATE_POST_REQUEST = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,13 +96,11 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
         if (id == R.id.add){
             Log.d("Profile Activity", "Add button working");
 
-            Intent galleryIntent = new Intent(
-                    Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent , RESULT_GALLERY );
+            Intent createPostIntent = new Intent(this, CreatePostActivity.class);
+            startActivityForResult(createPostIntent, CREATE_POST_REQUEST);
+//            startActivity(createPostIntent);
             return true;
-        }
-        if (id == R.id.action_settings) {
+        }else if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -108,12 +108,11 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode != ProfileActivity.RESULT_CANCELED) {
-            if (requestCode == RESULT_GALLERY) {
-                Uri selectedImageUri = data.getData();
-                Log.d("ProfileActivity","image callback");
-
-            }
+        if(resultCode == FragmentExploreTab.DELETE_POST_REQUEST) {
+            Log.i("DELETION OCCURRED", "post");
+            mAdapter.getFragExplore().deletePost(data.getIntExtra("position", -1));
+        } else if(resultCode == CREATE_POST_REQUEST) {
+            mAdapter.getFragExplore().addPost((Post) data.getSerializableExtra("post"));
         }
     }
 }
