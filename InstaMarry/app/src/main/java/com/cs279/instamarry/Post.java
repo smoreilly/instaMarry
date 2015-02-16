@@ -45,7 +45,6 @@ public class Post implements Serializable{
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
 
-
     public String getMy_time() {
         return my_time;
     }
