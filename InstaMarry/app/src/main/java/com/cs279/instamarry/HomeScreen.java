@@ -16,13 +16,13 @@ public class HomeScreen extends ActionBarActivity {
         Parse.initialize(this, "RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp", "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
 
         //Added so we can simulate a new user every time
-        ParseUser.logOut();
+        /*ParseUser.logOut();
         com.facebook.Session fbs = com.facebook.Session.getActiveSession();
         if (fbs == null) {
             fbs = new com.facebook.Session(this);
             com.facebook.Session.setActiveSession(fbs);
         }
-        fbs.closeAndClearTokenInformation();
+        fbs.closeAndClearTokenInformation();*/
         //end addition
 
         ParseUser user = ParseUser.getCurrentUser();
