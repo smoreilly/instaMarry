@@ -9,8 +9,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 
 public class DetailedItem extends ActionBarActivity {
     private int position;
@@ -53,7 +51,7 @@ public class DetailedItem extends ActionBarActivity {
             Log.d("Profile Activity", "Delete button working");
             Intent intent = new Intent(this, ProfileActivity.class);
             intent.putExtra("position", position);
-            setResult(FragmentExploreTab.DELETE_POST_REQUEST, intent);
+            setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
             finish();
             return true;
         }

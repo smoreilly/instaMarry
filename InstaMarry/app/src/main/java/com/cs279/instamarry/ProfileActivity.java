@@ -1,11 +1,6 @@
 package com.cs279.instamarry;
 
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -14,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
-import android.net.Uri;
 
 //http://developer.android.com/training/implementing-navigation/lateral.html#horizontal-paging
 
@@ -108,11 +102,11 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == FragmentExploreTab.DELETE_POST_REQUEST) {
+        if(resultCode == FragmentPersonalTab.DELETE_POST_REQUEST) {
             Log.i("DELETION OCCURRED", "post");
-            mAdapter.getFragExplore().deletePost(data.getIntExtra("position", -1));
+            mAdapter.getFragPersonal().deletePost(data.getIntExtra("position", -1));
         } else if(resultCode == CREATE_POST_REQUEST) {
-            mAdapter.getFragExplore().addPost((Post) data.getSerializableExtra("post"));
+            mAdapter.getFragPersonal().addPost((Post) data.getSerializableExtra("post"));
         }
     }
 }
