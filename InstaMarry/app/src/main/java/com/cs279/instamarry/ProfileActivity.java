@@ -1,12 +1,14 @@
 package com.cs279.instamarry;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.content.Intent;
 
 //http://developer.android.com/training/implementing-navigation/lateral.html#horizontal-paging
 
@@ -15,9 +17,8 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
-    // Tab titles
     private String[] tabs = { "Explore", "Personal"};
-
+    static final int CREATE_POST_REQUEST = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,4 +76,37 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.add){
+            Log.d("Profile Activity", "Add button working");
+
+            Intent createPostIntent = new Intent(this, CreatePostActivity.class);
+            startActivityForResult(createPostIntent, CREATE_POST_REQUEST);
+//            startActivity(createPostIntent);
+            return true;
+        }else if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == FragmentPersonalTab.DELETE_POST_REQUEST) {
+            Log.i("DELETION OCCURRED", "post");
+            mAdapter.getFragPersonal().deletePost(data.getIntExtra("position", -1));
+        } else if(resultCode == CREATE_POST_REQUEST) {
+            mAdapter.getFragPersonal().addPost((Post) data.getSerializableExtra("post"));
+        }
+    }
 }

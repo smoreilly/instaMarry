@@ -31,7 +31,7 @@
 //	@Override
 //	public void onCreate(Bundle savedInstanceState) {
 //		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.fragment_explore_tab_layout);
+//		setContentView(R.layout.fragment_personal_tab_layout);
 //
 //
 //		ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();

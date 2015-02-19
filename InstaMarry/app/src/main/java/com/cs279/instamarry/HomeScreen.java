@@ -1,44 +1,44 @@
 package com.cs279.instamarry;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Base64;
+import com.parse.*;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import com.facebook.*;
-import com.parse.*;
-import android.util.Log;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 
 public class HomeScreen extends ActionBarActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Parse.initialize(this, "RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp", "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
-        setContentView(R.layout.activity_home_screen);
-        Button b = (Button) findViewById(R.id.authButton);
-        b.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v)
-            {
-                facebookLogin(v);
-            }
-        });
+        //Added so we can simulate a new user every time
+        /*ParseUser.logOut();
+        com.facebook.Session fbs = com.facebook.Session.getActiveSession();
+        if (fbs == null) {
+            fbs = new com.facebook.Session(this);
+            com.facebook.Session.setActiveSession(fbs);
+        }
+        fbs.closeAndClearTokenInformation();*/
+        //end addition
 
-
+        ParseUser user = ParseUser.getCurrentUser();
+        Intent intent;
+        if(user != null){
+            intent = new Intent(this, ProfileActivity.class);
+        } else{
+            intent = new Intent(this, Login.class);
+        }
+        startActivity(intent);
+        finish();
     }
 
 
-    public void facebookLogin(final View v){
+    public void facebookLogin(final View v) {
         ParseFacebookUtils.logIn(this, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
@@ -56,6 +56,7 @@ public class HomeScreen extends ActionBarActivity {
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -71,21 +72,10 @@ public class HomeScreen extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search){
+        if (id == R.id.action_search) {
             return true;
-        }
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
+        }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
-    }
-
-
 }

@@ -9,9 +9,12 @@ import android.support.v4.app.FragmentPagerAdapter;
  * With help from http://www.androidhive.info/2013/10/android-tab-layout-with-swipeable-views-1/
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
-
+    private FragmentExploreTab fragExplore;
+    private FragmentPersonalTab fragPersonal;
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
+        fragExplore = new FragmentExploreTab();
+        fragPersonal = new FragmentPersonalTab();
     }
 
     @Override
@@ -20,10 +23,10 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         switch (index) {
             case 0:
                 // Top Rated fragment activity
-                return new FragmentExploreTab();
+                return fragExplore;
             case 1:
                 // Games fragment activity
-                return new FragmentPersonalTab();
+                return fragPersonal;
         }
 
         return null;
@@ -33,6 +36,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         // get item count - equal to number of tabs
         return 2;
+    }
+
+    public FragmentExploreTab getFragExplore() {
+        return fragExplore;
+    }
+
+    public FragmentPersonalTab getFragPersonal() {
+        return fragPersonal;
     }
 
 }
