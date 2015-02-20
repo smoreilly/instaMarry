@@ -19,6 +19,8 @@ import android.widget.ImageView;
 
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by pauljs on 1/28/2015.
  * Aid from: http://www.java2s.com/Code/Android/UI/ThisdemoillustratestheuseofCHOICEMODEMULTIPLEMODALakaselectionmodeonGridView.htm
@@ -27,6 +29,8 @@ public class FragmentExploreTab extends Fragment {
     private List<ResolveInfo> mApps;
     private View v;
     private GridView gridview;
+    //TODO
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,21 +40,7 @@ public class FragmentExploreTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_explore_tab_layout, container, false);
-//        gridview = (GridView) v.findViewById(R.id.gridView);
-//
-//        loadApps();
-//
-//        gridview.setAdapter(new AppsAdapter());
-//        gridview.setAdapter(new AppsAdapter());
-//        gridview.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-//        gridview.setMultiChoiceModeListener(new MultiChoiceModeListener());
-        /*
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(v.getContext(), "" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
+        ButterKnife.inject(this, v);
         return v;
     }
 

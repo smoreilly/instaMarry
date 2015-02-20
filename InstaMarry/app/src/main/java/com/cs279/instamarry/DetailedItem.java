@@ -9,18 +9,24 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 
 public class DetailedItem extends ActionBarActivity {
     private int position;
     private Post post;
+    @InjectView(R.id.imageView) ImageView imageView;
+    @InjectView(R.id.textViewArtist)TextView textViewArtist;
+    @InjectView(R.id.textViewDescription)TextView textViewDescription;
+    @InjectView(R.id.textViewTime)TextView textViewTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_item);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        TextView textViewArtist = (TextView) findViewById(R.id.textViewArtist);
-        TextView textViewDescription = (TextView) findViewById(R.id.textViewDescription);
-        TextView textViewTime = (TextView) findViewById(R.id.textViewTime);
+        ButterKnife.inject(this);
+
         position = getIntent().getIntExtra("position", -1);
         post = (Post) getIntent().getExtras().getSerializable("post");
         imageView.setImageBitmap(post.getMy_image());
@@ -54,6 +60,8 @@ public class DetailedItem extends ActionBarActivity {
             setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
             finish();
             return true;
+        }else if (id == R.id.editPost){
+            //TODO
         }
 
         return super.onOptionsItemSelected(item);

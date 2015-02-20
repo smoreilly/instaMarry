@@ -23,23 +23,28 @@ import android.widget.Toast;
 
 import com.parse.ParseUser;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by pauljs on 2/15/2015.
  */
 public class CreatePostActivity extends ActionBarActivity {
     private static int RESULT_GALLERY = 0;
-    private ImageView imageView;
+    @InjectView(R.id.imageViewCreatePostImage) ImageView imageView;
+    @InjectView(R.id.editTitle)EditText editTitle;
+    @InjectView(R.id.editTextDescription)EditText descriptionText;
+    @InjectView(R.id.buttonPost) Button buttonPost;
     private Bitmap bitmap;
-    private EditText titleText;
-    private EditText descriptionText;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
-        imageView = (ImageView) findViewById(R.id.imageViewCreatePostImage);
+        ButterKnife.inject(this);
+
         bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        Button button = (Button) findViewById(R.id.buttonPost);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,18 +55,18 @@ public class CreatePostActivity extends ActionBarActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Time now = new Time();
                 now.setToNow();
                 Post post = new Post("id",
-                    ((EditText) findViewById(R.id.editTitle)).getText().toString(),
-                        ((EditText) findViewById(R.id.editTextDescription)).getText().toString(),
-                        now.format("%k:%M:%S"),
-                        ParseUser.getCurrentUser().get("firstName") + " " + ParseUser.getCurrentUser().get("lastName"),
-                        bitmap);
-                Log.d("SO", post.toString());
+                    editTitle.getText().toString(),
+                    descriptionText.getText().toString(),
+                    now.format("%H:%M:%S"),
+                    ParseUser.getCurrentUser().get("firstName") + " " + ParseUser.getCurrentUser().get("lastName"),
+                    bitmap);
+                Log.d("SO",  ParseUser.getCurrentUser().get("firstName") + " " + ParseUser.getCurrentUser().get("lastName"));
                 Intent intent = new Intent();
                 intent.putExtra("post", post);
                 setResult(ProfileActivity.CREATE_POST_REQUEST, intent);

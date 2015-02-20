@@ -15,17 +15,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.InjectView;
 
 
 public class Login extends ActionBarActivity {
 
+    @InjectView(R.id.authButton) Button authButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Button b = (Button) findViewById(R.id.authButton);
-        b.setOnClickListener(new Button.OnClickListener() {
+        authButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {
                 facebookLogin(v);
@@ -35,7 +36,6 @@ public class Login extends ActionBarActivity {
 
 
     public void facebookLogin(final View v){
-        final List<String> x = new ArrayList<>();
         List<String> permissions = Arrays.asList("public_profile", "user_about_me", "email");
         ParseFacebookUtils.logIn(permissions,this, new LogInCallback() {
             @Override
