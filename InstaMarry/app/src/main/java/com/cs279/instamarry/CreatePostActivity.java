@@ -60,15 +60,18 @@ public class CreatePostActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Time now = new Time();
                 now.setToNow();
-                Post post = new Post("id",
+                Post post = new Post("1",
                     editTitle.getText().toString(),
                     descriptionText.getText().toString(),
                     now.format("%H:%M:%S"),
                     ParseUser.getCurrentUser().get("firstName") + " " + ParseUser.getCurrentUser().get("lastName"),
                     bitmap);
+
                 Log.d("SO",  ParseUser.getCurrentUser().get("firstName") + " " + ParseUser.getCurrentUser().get("lastName"));
+
+                post.save();
+
                 Intent intent = new Intent();
-                intent.putExtra("post", post);
                 setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
                 finish();
             }

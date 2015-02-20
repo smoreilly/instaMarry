@@ -104,9 +104,9 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == FragmentPersonalTab.DELETE_POST_REQUEST) {
             Log.i("DELETION OCCURRED", "post");
-            mAdapter.getFragPersonal().deletePost(data.getIntExtra("position", -1));
+            mAdapter.getFragPersonal().deletePost();
         } else if(resultCode == CREATE_POST_REQUEST) {
-            mAdapter.getFragPersonal().addPost((Post) data.getSerializableExtra("post"));
+            mAdapter.getFragPersonal().addPost();
         }
     }
 }

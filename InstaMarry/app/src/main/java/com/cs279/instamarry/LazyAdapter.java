@@ -2,6 +2,7 @@ package com.cs279.instamarry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,11 +17,11 @@ import android.widget.TextView;
 public class LazyAdapter extends BaseAdapter {
     
     private Activity activity;
-    private ArrayList<Post> data;
+    private List<Post> data;
     private static LayoutInflater inflater=null;
     public ImageLoader imageLoader;
     
-    public LazyAdapter(Activity a, ArrayList<Post> d) {
+    public LazyAdapter(Activity a, List<Post> d) {
         activity = a;
         data=d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

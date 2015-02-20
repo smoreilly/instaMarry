@@ -9,12 +9,14 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
 public class DetailedItem extends ActionBarActivity {
-    private int position;
+    private int id;
     private Post post;
     @InjectView(R.id.imageView) ImageView imageView;
     @InjectView(R.id.textViewArtist)TextView textViewArtist;
@@ -27,8 +29,11 @@ public class DetailedItem extends ActionBarActivity {
         setContentView(R.layout.activity_detailed_item);
         ButterKnife.inject(this);
 
-        position = getIntent().getIntExtra("position", -1);
-        post = (Post) getIntent().getExtras().getSerializable("post");
+        id = getIntent().getIntExtra("id", -1);
+        post = new Select()
+                .from(Post.class)
+                .where("PostID = ?", id)
+                .executeSingle();
         imageView.setImageBitmap(post.getMy_image());
         textViewArtist.setText(post.getMy_artist());
         textViewDescription.setText(post.getMy_description());
@@ -54,10 +59,10 @@ public class DetailedItem extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.deletePost) {
-            Log.d("Profile Activity", "Delete button working");
+            post.delete();
             Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("position", position);
             setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
+
             finish();
             return true;
         }else if (id == R.id.editPost){
