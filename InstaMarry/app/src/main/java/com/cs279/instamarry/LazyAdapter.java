@@ -23,6 +23,7 @@ public class LazyAdapter extends BaseAdapter {
     public LazyAdapter(Activity a, List<Post> d) {
         activity = a;
         data = d;
+        //TODO what does this do Justin? It breaks our code.
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

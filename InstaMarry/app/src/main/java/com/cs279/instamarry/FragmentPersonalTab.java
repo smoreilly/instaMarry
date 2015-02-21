@@ -73,6 +73,7 @@ public class FragmentPersonalTab extends Fragment {
         return v;
     }
 
+//TODO rework to use retrolambda and proper RXJava
 //TODO not really multithreading here only on one background thread
     private void pullFromParseWithRXJava(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
@@ -85,9 +86,9 @@ public class FragmentPersonalTab extends Fragment {
                             @Override
                             public byte[] call(ParseObject p) {
                                 try {
-                                    Log.d("SO", ""+ Thread.currentThread());
+                                    Log.d("SO", "" + Thread.currentThread());
                                     return ((ParseFile) p.get("postImage")).getData();
-                                }catch(ParseException e){
+                                } catch (ParseException e) {
                                     throw new RuntimeException();
                                 }
                             }
@@ -103,11 +104,11 @@ public class FragmentPersonalTab extends Fragment {
                                             .where("PostId = ?", postList.get(i).getObjectId())
                                             .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
                                             .executeSingle();
-                                    if(p != null){
+                                    if (p != null) {
                                         p.editMy_description(postList.get(i).getString("description"));
                                         p.editMy_Title(postList.get(i).getString("title"));
                                         p.editMy_image(images.get(i));
-                                    }else {
+                                    } else {
                                         (new Post(postList.get(i).getObjectId(),
                                                 postList.get(i).getString("title"),
                                                 postList.get(i).getString("description"),
@@ -139,12 +140,12 @@ public class FragmentPersonalTab extends Fragment {
         });
     }
 
-
+//jenky way of doing this. Keep for educational purposes
     private void pullFromParse(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
         //query.whereEqualTo("UserId", ParseUser.getCurrentUser().getObjectId());
         //Log.d("SO",ParseUser.getCurrentUser().getObjectId());
-        //We are in callback hell here// TODO ask KZ how to fix
+        //We are in callback hell here
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> postList, ParseException e) {
                 Log.d("SO","" + postList.size());

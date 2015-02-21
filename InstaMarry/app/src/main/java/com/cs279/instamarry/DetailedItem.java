@@ -10,6 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
+import com.parse.DeleteCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -60,17 +65,39 @@ public class DetailedItem extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.deletePost) {
-            post.delete();
-            Intent intent = new Intent(this, ProfileActivity.class);
-            setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
+            deletePost();
 
-            finish();
+
             return true;
         }else if (id == R.id.editPost){
             //TODO
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deletePost(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
+        query.getInBackground(post.getMy_post_id(), new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    object.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            post.delete();
+                            complete();
+                            finish();
+                        }
+                    });
+                } else {
+                    Log.d("SO", post.getMy_post_id());
+                }
+            }
+        });
+    }
+    private void complete(){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
     }
 
 
