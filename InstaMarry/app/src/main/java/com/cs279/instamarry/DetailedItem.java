@@ -16,7 +16,7 @@ import butterknife.InjectView;
 
 
 public class DetailedItem extends ActionBarActivity {
-    private int id;
+    private String id;
     private Post post;
     @InjectView(R.id.imageView) ImageView imageView;
     @InjectView(R.id.textViewArtist)TextView textViewArtist;
@@ -29,7 +29,8 @@ public class DetailedItem extends ActionBarActivity {
         setContentView(R.layout.activity_detailed_item);
         ButterKnife.inject(this);
 
-        id = getIntent().getIntExtra("id", -1);
+        id = getIntent().getStringExtra("id");
+        Log.d("SODetail",id);
         post = new Select()
                 .from(Post.class)
                 .where("PostID = ?", id)

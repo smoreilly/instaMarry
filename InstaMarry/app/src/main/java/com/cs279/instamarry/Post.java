@@ -21,24 +21,24 @@ public class Post extends Model{
     private String my_title;
     @Column(name = "Description")
     private String my_description;
-    @Column(name = "PostID")
-    private int my_post_id;
+    @Column(name = "PostId")
+    private String my_post_id;
     @Column(name = "Time")
     private String my_time;
-    @Column(name = "UserID")
+    @Column(name = "UserId")
     private String my_artist;
 
     public Post(){
         super();
     }
 
-    public void setMy_post_id(int my_post_id) {
+    public void setMy_post_id(String my_post_id) {
         this.my_post_id = my_post_id;
     }
 
     public Post(String post_id, String title, String description, String time, String artist, Bitmap bitmap){
         super();
-        my_post_id = Integer.parseInt(post_id);
+        my_post_id = post_id;
         my_title = title;
         my_description = description;
         my_time = time;
@@ -47,19 +47,20 @@ public class Post extends Model{
 
     }
 
-    public Post(String post_id, String title, String description, String time, String artist, byte[] byteArray){
+    public Post(String post_id, String title, String description, String time, String artist, byte[] bitmap){
         super();
-        my_post_id = Integer.parseInt(post_id);
+        my_post_id = post_id;
         my_title = title;
         my_description = description;
         my_time = time;
         my_artist = artist;
-        my_image = byteArray;
+        my_image = bitmap;
+
     }
 
     public static byte[] convertBitmapToByteArrayOS(Bitmap bitmap) {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 50, bs);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bs);
         return bs.toByteArray();
     }
 
@@ -71,13 +72,15 @@ public class Post extends Model{
         return my_time;
     }
 
-    public int getMy_post_id() {
+    public String getMy_post_id() {
         return my_post_id;
     }
 
     public String getMy_artist() {
         return my_artist;
     }
+
+    public void editMy_image(byte [] image){ my_image = image; }
 
     public void editMy_image(Bitmap image){
         my_image = Post.convertBitmapToByteArrayOS(image);

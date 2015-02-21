@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
@@ -26,6 +27,8 @@ public class Login extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.inject(this);
+
         authButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v)
             {

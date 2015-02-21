@@ -1,4 +1,4 @@
-package com.cs279.instamarry;
+/*package com.cs279.instamarry;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,25 +35,13 @@ public class ImageLoader {
     }
     
     final int stub_id = R.drawable.polo;
-    public void DisplayImage(String url, ImageView imageView, Bitmap myBitmap)
+    public void DisplayImage(ImageView imageView, Bitmap myBitmap)
     {
-        imageViews.put(imageView, url);
+        //imageViews.put(imageView, url);
         imageView.setImageBitmap(myBitmap);
-//        Bitmap bitmap=memoryCache.get(url);
-//        //MY INSERTION
-////        bitmap = null;
-//        if(bitmap!=null) {
-//            Log.i("BITMAP SUCCESS", "BITMAP SUCCESS");
-//            imageView.setImageBitmap(bitmap);
-//        } else
-//        {
-//            Log.i("BITMAP FAILED", "BITMAP FAILED");
-//            queuePhoto(url, imageView, bitmap);
-//            imageView.setImageResource(stub_id);
-//        }
     }
         
-    private void queuePhoto(String url, ImageView imageView, Bitmap bitmap)
+    /*private void queuePhoto(String url, ImageView imageView, Bitmap bitmap)
     {
         PhotoToLoad p=new PhotoToLoad(url, imageView, bitmap);
         executorService.submit(new PhotosLoader(p));
@@ -185,6 +173,6 @@ public class ImageLoader {
     public void clearCache() {
         memoryCache.clear();
         fileCache.clear();
-    }
+    }*/
 
-}
+//}*/

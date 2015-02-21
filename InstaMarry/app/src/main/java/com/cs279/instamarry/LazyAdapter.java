@@ -19,13 +19,11 @@ public class LazyAdapter extends BaseAdapter {
     private Activity activity;
     private List<Post> data;
     private static LayoutInflater inflater=null;
-    public ImageLoader imageLoader;
-    
+
     public LazyAdapter(Activity a, List<Post> d) {
         activity = a;
-        data=d;
+        data = d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        imageLoader=new ImageLoader(activity.getApplicationContext());
     }
 
     public int getCount() {
@@ -49,22 +47,11 @@ public class LazyAdapter extends BaseAdapter {
         TextView artist = (TextView)vi.findViewById(R.id.artist); // artist name
         TextView duration = (TextView)vi.findViewById(R.id.duration); // duration
         ImageView thumb_image=(ImageView)vi.findViewById(R.id.list_image); // thumb image
-        
-//        HashMap<String, String> song = new HashMap<String, String>();
-//        song = data.get(position);
-//
-//        // Setting all values in listview
-//        title.setText(song.get(FragmentExploreTab.KEY_TITLE));
-//        artist.setText(song.get(FragmentExploreTab.KEY_ARTIST));
-//        duration.setText(song.get(FragmentExploreTab.KEY_DURATION));
-//        imageLoader.DisplayImage(song.get(FragmentExploreTab.KEY_THUMB_URL), thumb_image);
-        //MY INSERT
         Post post = data.get(position);
         title.setText(post.getMy_title());
         artist.setText(post.getMy_description());
         duration.setText(post.getMy_time());
-        Bitmap bitmap = post.getMy_image();
-        imageLoader.DisplayImage(bitmap.toString(), thumb_image, bitmap);
+        thumb_image.setImageBitmap(post.getMy_image());
         return vi;
     }
 }
