@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +26,14 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import retrofit.RestAdapter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -70,8 +73,13 @@ public class FragmentPersonalTab extends Fragment {
         /*TODO fix this so is only updates on pull to refresh and when first created. Not on
         every screen change*/
         pullFromParseWithRXJava();
+
         return v;
     }
+
+
+
+
 
 //TODO rework to use retrolambda and proper RXJava
 //TODO not really multithreading here only on one background thread
@@ -88,6 +96,7 @@ public class FragmentPersonalTab extends Fragment {
                                 try {
                                     Log.d("SO", "" + Thread.currentThread());
                                     return ((ParseFile) p.get("postImage")).getData();
+
                                 } catch (ParseException e) {
                                     throw new RuntimeException();
                                 }
@@ -139,6 +148,82 @@ public class FragmentPersonalTab extends Fragment {
             }
         });
     }
+//This is the way we should be doing this but it ain't working for some reason...
+   /* private void betterPull()throws ParseException{
+        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("https://api.parse.com").build();
+        final ParseReq pr = restAdapter.create(ParseReq.class);
+        pr.getUserPosts(ParseUser.getCurrentUser().getObjectId())
+                .flatMap(new Func1<List<ParseObject>, Observable<ParseObject>>() {
+                    @Override
+                    public Observable<ParseObject> call(List<ParseObject> parseObjects) {
+                        return Observable.from(parseObjects);
+                    }
+                })
+                .flatMap(new Func1<ParseObject, Observable<Pair<ParseObject, byte[]>>>() {
+                    @Override
+                    public Observable<Pair<ParseObject, byte[]>> call(ParseObject parseObject) {
+                        return Observable.just(parseObject).zipWith(
+                                getPostImage(parseObject).subscribeOn(Schedulers.io()),
+                                new Func2<ParseObject, byte[], Pair<ParseObject, byte[]>>() {
+                                    @Override
+                                    public Pair<ParseObject, byte[]> call(ParseObject parseObject, byte[] parseFile) {
+                                        return Pair.create(parseObject, parseFile);
+                                    }
+                                });
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Pair<ParseObject, byte[]>>() {
+                    @Override
+                    public void onCompleted() {
+                        songsList = new Select()
+                                .from(Post.class)
+                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
+                                .execute();
+                        adapter = new LazyAdapter(getActivity(), songsList);
+                        list.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("SO", "Error in better RXJava implementation");
+                    }
+
+                    @Override
+                    public void onNext(Pair<ParseObject, byte[]> pair) {
+                        Post p = new Select()
+                                .from(Post.class)
+                                .where("PostId = ?", pair.first.getObjectId())
+                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
+                                .executeSingle();
+                        if (p != null) {
+                            p.editMy_description(pair.first.getString("description"));
+                            p.editMy_Title(pair.first.getString("title"));
+                            p.editMy_image(pair.second);
+                        } else {
+                            (new Post(pair.first.getObjectId(),
+                                    pair.first.getString("title"),
+                                    pair.first.getString("description"),
+                                    pair.first.getString("time"),
+                                    pair.first.getString("userId"),
+                                    pair.second)).save();
+                        }
+                    }
+                });
+
+
+    }
+
+    private Observable<byte[]> getPostImage(ParseObject parseObject){
+        try{
+            Log.d("SO", Thread.currentThread().toString());
+            return Observable.just(((ParseFile) parseObject.get("postImage")).getData());
+        }catch(ParseException e){
+            Log.d("SO", "getPOstImage exception");
+            throw new RuntimeException();
+        }
+    }
 
 //jenky way of doing this. Keep for educational purposes
     private void pullFromParse(){
@@ -174,7 +259,7 @@ public class FragmentPersonalTab extends Fragment {
                 }
             }
         });
-    }
+    }*/
 
     public void addPost() {
 

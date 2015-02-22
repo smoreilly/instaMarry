@@ -22,15 +22,7 @@ android {
         }
     }
 }
-buildscript {
-    repositories {
-        mavenCentral()
-    }
 
-    dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:2.5.0'
-    }
-}
 repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -45,5 +37,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.michaelpardo:activeandroid:3.1.0-SNAPSHOT'
     compile 'io.reactivex:rxandroid:0.24.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
 }
 
