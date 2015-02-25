@@ -9,20 +9,37 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.activeandroid.query.Select;
+import com.parse.DeleteCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 
 public class DetailedItem extends ActionBarActivity {
-    private int position;
+    private String id;
     private Post post;
+    @InjectView(R.id.imageView) ImageView imageView;
+    @InjectView(R.id.textViewArtist)TextView textViewArtist;
+    @InjectView(R.id.textViewDescription)TextView textViewDescription;
+    @InjectView(R.id.textViewTime)TextView textViewTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_item);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        TextView textViewArtist = (TextView) findViewById(R.id.textViewArtist);
-        TextView textViewDescription = (TextView) findViewById(R.id.textViewDescription);
-        TextView textViewTime = (TextView) findViewById(R.id.textViewTime);
-        position = getIntent().getIntExtra("position", -1);
-        post = (Post) getIntent().getExtras().getSerializable("post");
+        ButterKnife.inject(this);
+
+        id = getIntent().getStringExtra("id");
+        Log.d("SODetail",id);
+        post = new Select()
+                .from(Post.class)
+                .where("PostID = ?", id)
+                .executeSingle();
         imageView.setImageBitmap(post.getMy_image());
         textViewArtist.setText(post.getMy_artist());
         textViewDescription.setText(post.getMy_description());
@@ -48,15 +65,39 @@ public class DetailedItem extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.deletePost) {
-            Log.d("Profile Activity", "Delete button working");
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putExtra("position", position);
-            setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
-            finish();
+            deletePost();
+
+
             return true;
+        }else if (id == R.id.editPost){
+            //TODO
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deletePost(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
+        query.getInBackground(post.getMy_post_id(), new GetCallback<ParseObject>() {
+            public void done(ParseObject object, ParseException e) {
+                if (e == null) {
+                    object.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            post.delete();
+                            complete();
+                            finish();
+                        }
+                    });
+                } else {
+                    Log.d("SO", post.getMy_post_id());
+                }
+            }
+        });
+    }
+    private void complete(){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
     }
 
 

@@ -1,7 +1,5 @@
 package com.cs279.instamarry;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
@@ -18,28 +15,37 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
+import java.io.ByteArrayOutputStream;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * Created by pauljs on 2/15/2015.
  */
 public class CreatePostActivity extends ActionBarActivity {
     private static int RESULT_GALLERY = 0;
-    private ImageView imageView;
+    @InjectView(R.id.imageViewCreatePostImage) ImageView imageView;
+    @InjectView(R.id.editTitle)EditText editTitle;
+    @InjectView(R.id.editTextDescription)EditText descriptionText;
+    @InjectView(R.id.buttonPost) Button buttonPost;
     private Bitmap bitmap;
-    private EditText titleText;
-    private EditText descriptionText;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
-        imageView = (ImageView) findViewById(R.id.imageViewCreatePostImage);
+        ButterKnife.inject(this);
+
         bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-        Button button = (Button) findViewById(R.id.buttonPost);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,26 +56,50 @@ public class CreatePostActivity extends ActionBarActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Time now = new Time();
-                now.setToNow();
-                Post post = new Post("id",
-                    ((EditText) findViewById(R.id.editTitle)).getText().toString(),
-                        ((EditText) findViewById(R.id.editTextDescription)).getText().toString(),
-                        now.format("%k:%M:%S"),
-                        ParseUser.getCurrentUser().get("firstName") + " " + ParseUser.getCurrentUser().get("lastName"),
-                        bitmap);
-                Log.d("SO", post.toString());
-                Intent intent = new Intent();
-                intent.putExtra("post", post);
-                setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
-                finish();
+                createPost();
             }
         });
+    }
 
-
+    private void createPost(){
+        Time now = new Time();
+        now.setToNow();
+        Log.d("SO", "Before compression");
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] data = stream.toByteArray();
+        final Post post = new Post("-1",
+                editTitle.getText().toString(),
+                descriptionText.getText().toString(),
+                now.format("%H:%M:%S"),
+                ParseUser.getCurrentUser().getObjectId(),
+                data);
+        Log.d("SO","After Compression");
+        final ParseFile file = new ParseFile("image.jpg", data);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                final ParseObject parsePost = new ParseObject("Post");
+                parsePost.put("title", post.getMy_title());
+                parsePost.put("description", post.getMy_description());
+                parsePost.put("time", post.getMy_time());
+                parsePost.put("userId", post.getMy_artist());
+                parsePost.put("postImage", file);
+                parsePost.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        post.setMy_post_id(parsePost.getObjectId());
+                        post.save();
+                        Intent intent = new Intent();
+                        setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
+                        finish();
+                    }
+                });
+            }
+        });
 
     }
 
@@ -78,17 +108,13 @@ public class CreatePostActivity extends ActionBarActivity {
         if (resultCode != ProfileActivity.RESULT_CANCELED) {
             if (requestCode == RESULT_GALLERY) {
                 Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                if (cursor.moveToFirst()) {
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String filePath = cursor.getString(columnIndex);
-                    bitmap = BitmapFactory.decodeFile(filePath);
-                    Log.d("ProfileActivity", "image callback");
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     imageView.setImageBitmap(bitmap);
+                }catch(Exception e){
+                    Log.d("SO","Could not find file");
                 }
             }
         }
-        Log.i("BLAH", "" + requestCode + " " + resultCode);
     }
 }

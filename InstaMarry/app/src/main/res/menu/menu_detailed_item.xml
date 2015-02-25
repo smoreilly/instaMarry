@@ -8,4 +8,10 @@
         android:title="add"
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_delete" />
+    <item android:id="@+id/editPost"
+        android:title="edit"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_edit"/>
+
+
 </menu>
