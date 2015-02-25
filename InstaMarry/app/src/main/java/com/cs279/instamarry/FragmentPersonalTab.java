@@ -12,11 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.activeandroid.query.Select;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.FindCallback;
 import com.parse.ParseUser;
 import com.parse.ParseFile;
 
@@ -77,7 +75,6 @@ public class FragmentPersonalTab extends Fragment {
         return v;
     }
 
-//TODO not really multithreading here only on one background thread don't know why
     private void pullFromParseWithRXJava(){
         Observable.from(getUserPosts())
                 .flatMap(parseObject ->
@@ -117,7 +114,9 @@ public class FragmentPersonalTab extends Fragment {
 
     private List<ParseObject> getUserPosts(){
         try {
-            return ParseQuery.getQuery("Post").find();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
+            query.whereEqualTo("userId", ParseUser.getCurrentUser().getObjectId());
+            return query.find();
         }catch (ParseException err){
             throw new RuntimeException();
         }
