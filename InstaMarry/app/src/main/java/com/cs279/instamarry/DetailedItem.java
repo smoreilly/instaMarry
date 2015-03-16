@@ -41,9 +41,7 @@ public class DetailedItem extends ActionBarActivity {
                 .from(Post.class)
                 .where("PostID = ?", id)
                 .executeSingle();
-        if(!post.getMy_image_url().equals("")) {
-            Picasso.with(getApplicationContext()).load(post.getMy_image_url()).into(imageView);
-        }
+        Picasso.with(getApplicationContext()).load(post.getMy_image_url()).into(imageView);
         textViewArtist.setText(post.getMy_artist());
         textViewDescription.setText(post.getMy_description());
         textViewTime.setText(post.getMy_time());

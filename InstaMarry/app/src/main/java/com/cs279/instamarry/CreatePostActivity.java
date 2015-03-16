@@ -77,7 +77,7 @@ public class CreatePostActivity extends ActionBarActivity {
                 descriptionText.getText().toString(),
                 now.format("%H:%M:%S"),
                 ParseUser.getCurrentUser().getObjectId()
-                );//data
+                );
         Log.d("SO","After Compression");
         final ParseFile file = new ParseFile("image.jpg", data);
         file.saveInBackground(new SaveCallback() {

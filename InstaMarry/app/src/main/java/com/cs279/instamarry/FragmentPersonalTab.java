@@ -138,7 +138,7 @@ public class FragmentPersonalTab extends Fragment {
                                 parseObject.getString("description"),
                                 parseObject.getString("time"),
                                 parseObject.getString("userId")
-                                );//Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+                                );
                         post.setMy_image_url(parseObject.getString("image_url"));
                         post.save();
                     }
