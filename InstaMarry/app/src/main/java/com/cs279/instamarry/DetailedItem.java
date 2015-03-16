@@ -15,6 +15,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,7 +41,9 @@ public class DetailedItem extends ActionBarActivity {
                 .from(Post.class)
                 .where("PostID = ?", id)
                 .executeSingle();
-        imageView.setImageBitmap(post.getMy_image());
+        if(!post.getMy_image_url().equals("")) {
+            Picasso.with(getApplicationContext()).load(post.getMy_image_url()).into(imageView);
+        }
         textViewArtist.setText(post.getMy_artist());
         textViewDescription.setText(post.getMy_description());
         textViewTime.setText(post.getMy_time());

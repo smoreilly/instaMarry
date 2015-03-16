@@ -3,6 +3,7 @@ package com.cs279.instamarry;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -15,8 +16,8 @@ import java.io.Serializable;
  */
 
 public class Post extends Model{
-    @Column(name = "Image")
-    private byte[] my_image;
+//    @Column(name = "Image")
+//    private byte[] my_image;
     @Column(name = "Title")
     private String my_title;
     @Column(name = "Description")
@@ -37,33 +38,21 @@ public class Post extends Model{
     public void setMy_post_id(String my_post_id) {
         this.my_post_id = my_post_id;
     }
-    public void setMy_image_url(String my_image_uri) {
+    public void setMy_image_url(String my_image_url) {
         this.my_image_url = my_image_url;
     }
     public String getMy_image_url() {
         return my_image_url;
     }
 
-    public Post(String post_id, String title, String description, String time, String artist, Bitmap bitmap){
+    public Post(String post_id, String title, String description, String time, String artist){
         super();
         my_post_id = post_id;
         my_title = title;
         my_description = description;
         my_time = time;
         my_artist = artist;
-        my_image = Post.convertBitmapToByteArrayOS(bitmap);
         my_image_url = ""; //can't set image_url until file saved on parse
-
-    }
-
-    public Post(String post_id, String title, String description, String time, String artist, byte[] bitmap){
-        super();
-        my_post_id = post_id;
-        my_title = title;
-        my_description = description;
-        my_time = time;
-        my_artist = artist;
-        my_image = bitmap;
 
     }
 
@@ -87,16 +76,6 @@ public class Post extends Model{
 
     public String getMy_artist() {
         return my_artist;
-    }
-
-    public void editMy_image(byte [] image){ my_image = image; }
-
-    public void editMy_image(Bitmap image){
-        my_image = Post.convertBitmapToByteArrayOS(image);
-    }
-
-    public Bitmap getMy_image(){
-        return Post.convertByteArrayToBitmap(my_image);
     }
 
     public void editMy_Title(String title){

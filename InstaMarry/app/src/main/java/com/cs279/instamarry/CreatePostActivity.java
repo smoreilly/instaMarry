@@ -21,6 +21,7 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -75,8 +76,8 @@ public class CreatePostActivity extends ActionBarActivity {
                 editTitle.getText().toString(),
                 descriptionText.getText().toString(),
                 now.format("%H:%M:%S"),
-                ParseUser.getCurrentUser().getObjectId(),
-                data);
+                ParseUser.getCurrentUser().getObjectId()
+                );//data
         Log.d("SO","After Compression");
         final ParseFile file = new ParseFile("image.jpg", data);
         file.saveInBackground(new SaveCallback() {
@@ -88,16 +89,17 @@ public class CreatePostActivity extends ActionBarActivity {
                 parsePost.put("time", post.getMy_time());
                 parsePost.put("userId", post.getMy_artist());
                 parsePost.put("postImage", file);
+                parsePost.put("image_url", file.getUrl());
                 parsePost.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        post.setMy_post_id(parsePost.getObjectId());
-                        post.setMy_image_url(((ParseFile) parsePost.get("postImage")).getUrl());
-                        post.save();
-                        Intent intent = new Intent();
-                        setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
-                        finish();
-                    }
+                       post.setMy_post_id(parsePost.getObjectId());
+                       post.setMy_image_url((String) parsePost.get("image_url"));
+                       post.save();
+                       Intent intent = new Intent();
+                       setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
+                       finish();
+                   }
                 });
             }
         });
@@ -109,9 +111,9 @@ public class CreatePostActivity extends ActionBarActivity {
         if (resultCode != ProfileActivity.RESULT_CANCELED) {
             if (requestCode == RESULT_GALLERY) {
                 Uri selectedImage = data.getData();
+                Picasso.with(getApplicationContext()).load(selectedImage).into(imageView);
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                    imageView.setImageBitmap(bitmap);
                 }catch(Exception e){
                     Log.d("SO","Could not find file");
                 }

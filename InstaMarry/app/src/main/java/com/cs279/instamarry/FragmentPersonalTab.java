@@ -133,12 +133,14 @@ public class FragmentPersonalTab extends Fragment {
 
                     @Override
                     public void onNext(ParseObject parseObject) {
-                        (new Post(parseObject.getObjectId(),
+                        Post post = new Post(parseObject.getObjectId(),
                                 parseObject.getString("title"),
                                 parseObject.getString("description"),
                                 parseObject.getString("time"),
-                                parseObject.getString("userId"),
-                                Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888))).save();
+                                parseObject.getString("userId")
+                                );//Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+                        post.setMy_image_url(parseObject.getString("image_url"));
+                        post.save();
                     }
                 });
 
@@ -165,8 +167,9 @@ public class FragmentPersonalTab extends Fragment {
     }
 
     public void addPost() {
-
+        Log.i("TEST FOR CURSOR WINDOW", "BLAH");
         songsList = new Select().from(Post.class).execute();
+        Log.i("TEST FOR CURSOR WINDOW", "BLAH2");
         adapter = new LazyAdapter(getActivity(), songsList);
         list.setAdapter(adapter);
     }

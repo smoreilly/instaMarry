@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,10 @@ public class LazyAdapter extends BaseAdapter {
         artist.setText(post.getMy_description());
         duration.setText(post.getMy_time());
 //        thumb_image.setImageBitmap(post.getMy_image());
-        Picasso.with(activity.getApplicationContext()).load(post.getMy_image_url()).into(thumb_image);
+        Log.d("THE URL IS FUDGE: ", post.getMy_image_url());
+        if(!post.getMy_image_url().equals("")) {
+            Picasso.with(activity.getApplicationContext()).load(post.getMy_image_url()).into(thumb_image);
+        }
         return vi;
     }
 }
