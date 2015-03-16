@@ -72,29 +72,31 @@ public class CreatePostActivity extends ActionBarActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] data = stream.toByteArray();
-        final Post post = new Post("-1",
-                editTitle.getText().toString(),
-                descriptionText.getText().toString(),
-                now.format("%H:%M:%S"),
-                ParseUser.getCurrentUser().getObjectId()
-                );
+        String title = editTitle.getText().toString();
+        String description = descriptionText.getText().toString();
+        String time = now.format("%H:%M:%S");
+        String user = ParseUser.getCurrentUser().getObjectId();
         Log.d("SO","After Compression");
         final ParseFile file = new ParseFile("image.jpg", data);
         file.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 final ParseObject parsePost = new ParseObject("Post");
-                parsePost.put("title", post.getMy_title());
-                parsePost.put("description", post.getMy_description());
-                parsePost.put("time", post.getMy_time());
-                parsePost.put("userId", post.getMy_artist());
+                parsePost.put("title", title);
+                parsePost.put("description", description);
+                parsePost.put("time", time);
+                parsePost.put("userId", user);
                 parsePost.put("postImage", file);
-                parsePost.put("image_url", file.getUrl());
                 parsePost.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                       post.setMy_post_id(parsePost.getObjectId());
-                       post.setMy_image_url((String) parsePost.get("image_url"));
+                        final Post post = new Post(parsePost.getObjectId(),
+                                title,
+                                description,
+                                time,
+                                user,
+                                ((ParseFile) parsePost.get("postImage")).getUrl() //can't set image_url until file saved on parse
+                        );
                        post.save();
                        Intent intent = new Intent();
                        setResult(ProfileActivity.CREATE_POST_REQUEST, intent);

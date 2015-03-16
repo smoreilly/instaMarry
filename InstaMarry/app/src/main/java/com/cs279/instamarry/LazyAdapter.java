@@ -55,6 +55,7 @@ public class LazyAdapter extends BaseAdapter {
         title.setText(post.getMy_title());
         artist.setText(post.getMy_description());
         duration.setText(post.getMy_time());
+
         Log.d("THE URL IS FUDGE: ", post.getMy_image_url());
         Picasso.with(activity.getApplicationContext()).load(post.getMy_image_url()).into(thumb_image);
         return vi;

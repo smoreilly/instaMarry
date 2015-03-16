@@ -1,14 +1,21 @@
 package com.cs279.instamarry;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 //http://developer.android.com/training/implementing-navigation/lateral.html#horizontal-paging
 
@@ -18,6 +25,7 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     private TabsPagerAdapter mAdapter;
     private android.support.v7.app.ActionBar actionBar;
     private String[] tabs = { "Explore", "Personal"};
+    private EditText search_bar;
     static final int CREATE_POST_REQUEST = 3;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +89,21 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
+        /** Get the action view of the menu item whose id is search */
+        View v = (View) menu.findItem(R.id.searchPerson).getActionView();
+
+        /** Get the edit text from the action view */
+        search_bar = ( EditText ) v.findViewById(R.id.editText_person_search);
+
+        /** Setting an action listener */
+        search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Toast.makeText(getBaseContext(), "Search : " + v.getText(), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         return true;
     }
 
@@ -96,6 +119,9 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
             return true;
         }else if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.searchPerson) {
+            search_bar.requestFocus();
+            ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
         return super.onOptionsItemSelected(item);
     }

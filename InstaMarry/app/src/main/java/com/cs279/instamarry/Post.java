@@ -45,14 +45,14 @@ public class Post extends Model{
         return my_image_url;
     }
 
-    public Post(String post_id, String title, String description, String time, String artist){
+    public Post(String post_id, String title, String description, String time, String artist, String image_url){
         super();
         my_post_id = post_id;
         my_title = title;
         my_description = description;
         my_time = time;
         my_artist = artist;
-        my_image_url = ""; //can't set image_url until file saved on parse
+        my_image_url = image_url; //can't set image_url until file saved on parse
 
     }
 

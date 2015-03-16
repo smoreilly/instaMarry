@@ -137,9 +137,8 @@ public class FragmentPersonalTab extends Fragment {
                                 parseObject.getString("title"),
                                 parseObject.getString("description"),
                                 parseObject.getString("time"),
-                                parseObject.getString("userId")
-                                );
-                        post.setMy_image_url(parseObject.getString("image_url"));
+                                parseObject.getString("userId"),
+                                ((ParseFile) parseObject.get("postImage")).getUrl());
                         post.save();
                     }
                 });
