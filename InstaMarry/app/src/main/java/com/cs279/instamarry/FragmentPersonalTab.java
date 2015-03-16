@@ -1,6 +1,7 @@
 package com.cs279.instamarry;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -71,25 +72,56 @@ public class FragmentPersonalTab extends Fragment {
                         getObjectId())
                 .execute();
         for(Post p: pList) p.delete();
+        Log.i("Pulling From Parse", "Pulling");
         pullFromParseWithRXJava();
         return v;
     }
 
     private void pullFromParseWithRXJava(){
+//        Observable.from(getUserPosts())
+//                .flatMap(parseObject ->
+//                        Observable.just(parseObject).zipWith(
+//                                Observable.just(getFile(parseObject)).subscribeOn(Schedulers.io()),
+//                                Pair::create))
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<Pair<ParseObject, byte[]>>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        songsList = new Select()
+//                                .from(Post.class)
+//                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
+//                                .execute();
+//                        adapter = new LazyAdapter(getActivity(), songsList);
+//                        list.setAdapter(adapter);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        Log.d("SO", "Java RX Error: " + e);
+//                    }
+//
+//                    @Override
+//                    public void onNext(Pair<ParseObject, byte[]> pair) {
+//                        (new Post(pair.first.getObjectId(),
+//                                pair.first.getString("title"),
+//                                pair.first.getString("description"),
+//                                pair.first.getString("time"),
+//                                pair.first.getString("userId"),
+//                                pair.second)).save();
+//                    }
+//                });
         Observable.from(getUserPosts())
-                .flatMap(parseObject ->
-                        Observable.just(parseObject).zipWith(
-                                Observable.just(getFile(parseObject)).subscribeOn(Schedulers.io()),
-                                Pair::create))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Pair<ParseObject, byte[]>>() {
+                .subscribe(new Subscriber<ParseObject>() {
                     @Override
                     public void onCompleted() {
                         songsList = new Select()
                                 .from(Post.class)
                                 .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
                                 .execute();
+                        Log.i("SONG SIZE", "" + songsList.size());
                         adapter = new LazyAdapter(getActivity(), songsList);
                         list.setAdapter(adapter);
                     }
@@ -100,13 +132,13 @@ public class FragmentPersonalTab extends Fragment {
                     }
 
                     @Override
-                    public void onNext(Pair<ParseObject, byte[]> pair) {
-                        (new Post(pair.first.getObjectId(),
-                                pair.first.getString("title"),
-                                pair.first.getString("description"),
-                                pair.first.getString("time"),
-                                pair.first.getString("userId"),
-                                pair.second)).save();
+                    public void onNext(ParseObject parseObject) {
+                        (new Post(parseObject.getObjectId(),
+                                parseObject.getString("title"),
+                                parseObject.getString("description"),
+                                parseObject.getString("time"),
+                                parseObject.getString("userId"),
+                                Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888))).save();
                     }
                 });
 
@@ -122,12 +154,14 @@ public class FragmentPersonalTab extends Fragment {
         }
     }
 
-    private byte[] getFile(ParseObject parseObject){
-        try {
-            return ((ParseFile) parseObject.get("postImage")).getData();
-        }catch(ParseException err){
-            throw new RuntimeException();
-        }
+    private String getFile(ParseObject parseObject){
+//        try {
+//            ((ParseFile) parseObject.get("postImage")).getData();
+            return ((ParseFile) parseObject.get("postImage")).getUrl();
+//        }
+//        }catch(ParseException err){
+//            throw new RuntimeException();
+//        }
     }
 
     public void addPost() {

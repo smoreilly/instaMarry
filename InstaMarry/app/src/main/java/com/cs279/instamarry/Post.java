@@ -27,6 +27,8 @@ public class Post extends Model{
     private String my_time;
     @Column(name = "UserId")
     private String my_artist;
+    @Column(name = "ImageURL")
+    private String my_image_url;
 
     public Post(){
         super();
@@ -34,6 +36,12 @@ public class Post extends Model{
 
     public void setMy_post_id(String my_post_id) {
         this.my_post_id = my_post_id;
+    }
+    public void setMy_image_url(String my_image_uri) {
+        this.my_image_url = my_image_url;
+    }
+    public String getMy_image_url() {
+        return my_image_url;
     }
 
     public Post(String post_id, String title, String description, String time, String artist, Bitmap bitmap){
@@ -44,6 +52,7 @@ public class Post extends Model{
         my_time = time;
         my_artist = artist;
         my_image = Post.convertBitmapToByteArrayOS(bitmap);
+        my_image_url = ""; //can't set image_url until file saved on parse
 
     }
 

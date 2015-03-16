@@ -44,7 +44,7 @@ public class CreatePostActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
         ButterKnife.inject(this);
-
+        Log.d("TEST", "TEST");
         bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +92,7 @@ public class CreatePostActivity extends ActionBarActivity {
                     @Override
                     public void done(ParseException e) {
                         post.setMy_post_id(parsePost.getObjectId());
+                        post.setMy_image_url(((ParseFile) parsePost.get("postImage")).getUrl());
                         post.save();
                         Intent intent = new Intent();
                         setResult(ProfileActivity.CREATE_POST_REQUEST, intent);

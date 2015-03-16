@@ -14,6 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 public class LazyAdapter extends BaseAdapter {
     
     private Activity activity;
@@ -52,7 +54,8 @@ public class LazyAdapter extends BaseAdapter {
         title.setText(post.getMy_title());
         artist.setText(post.getMy_description());
         duration.setText(post.getMy_time());
-        thumb_image.setImageBitmap(post.getMy_image());
+//        thumb_image.setImageBitmap(post.getMy_image());
+        Picasso.with(activity.getApplicationContext()).load(post.getMy_image_url()).into(thumb_image);
         return vi;
     }
 }
