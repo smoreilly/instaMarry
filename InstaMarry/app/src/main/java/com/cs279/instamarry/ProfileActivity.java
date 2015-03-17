@@ -100,7 +100,9 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Toast.makeText(getBaseContext(), "Search : " + v.getText(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class); new Intent();
+                intent.putExtra("userId", v.getText());
+                startActivity(intent);
                 return false;
             }
         });

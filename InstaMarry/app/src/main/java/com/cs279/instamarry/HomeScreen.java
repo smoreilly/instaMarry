@@ -15,7 +15,7 @@ public class HomeScreen extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Parse.initialize(this, "RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp", "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
+        Parse.initialize(this, getString(R.string.applicationId), "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
         //Added so we can simulate a new user every time
         /*ParseUser.logOut();
         com.facebook.Session fbs = com.facebook.Session.getActiveSession();
