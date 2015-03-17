@@ -3,13 +3,10 @@ package com.cs279.instamarry;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
 
 /**
  * Created by Sean on 2/4/2015.
@@ -27,7 +24,7 @@ public class Post extends Model{
     @Column(name = "Time")
     private String my_time;
     @Column(name = "UserId")
-    private String my_artist;
+    private String my_userId;
     @Column(name = "ImageURL")
     private String my_image_url;
 
@@ -45,13 +42,13 @@ public class Post extends Model{
         return my_image_url;
     }
 
-    public Post(String post_id, String title, String description, String time, String artist, String image_url){
+    public Post(String post_id, String title, String description, String time, String userId, String image_url){
         super();
         my_post_id = post_id;
         my_title = title;
         my_description = description;
         my_time = time;
-        my_artist = artist;
+        my_userId = userId;
         my_image_url = image_url; //can't set image_url until file saved on parse
 
     }
@@ -74,8 +71,8 @@ public class Post extends Model{
         return my_post_id;
     }
 
-    public String getMy_artist() {
-        return my_artist;
+    public String getMy_userId() {
+        return my_userId;
     }
 
     public void editMy_Title(String title){

@@ -43,7 +43,7 @@ public class DetailedItem extends ActionBarActivity {
                 .where("PostID = ?", id)
                 .executeSingle();
         Picasso.with(getApplicationContext()).load(post.getMy_image_url()).into(imageView);
-        textViewArtist.setText(post.getMy_artist());
+        textViewArtist.setText(post.getMy_userId());
         textViewDescription.setText(post.getMy_description());
         textViewTime.setText(post.getMy_time());
     }
@@ -52,7 +52,7 @@ public class DetailedItem extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(post.getMy_artist().equals(ParseUser.getCurrentUser().getObjectId())) {
+        if(post.getMy_userId().equals(ParseUser.getCurrentUser().getObjectId())) {
             getMenuInflater().inflate(R.menu.menu_detailed_item, menu);
         }
         return true;
