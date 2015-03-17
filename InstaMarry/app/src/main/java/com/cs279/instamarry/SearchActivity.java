@@ -90,7 +90,7 @@ public class SearchActivity extends ActionBarActivity {
         Log.i("Pulling From Parse", "Pulling");
         //Switch this activity to a fragment to use getActivity(). must pass this currently
         // to getactivity for Lazyadapter
-        pullFromParseWithRXJava(this, searched_text);
+        pullFromParseWithRXJava(searched_text);
         //FOR USE WHEN WANT BETTER SUGGESTIONS FOR SEARCHES
 //        ParseFacebookUtils.initialize(getString(R.string.applicationId));
 //        requestMyAppFacebookFriendsWithAppInstalled(ParseFacebookUtils.getSession());
@@ -141,7 +141,7 @@ public class SearchActivity extends ActionBarActivity {
 //        friendsRequest.executeAsync();
     }
 
-    private void pullFromParseWithRXJava(Activity activity, String user_name){
+    private void pullFromParseWithRXJava(String user_name){
             Observable.from(getUserPosts(user_name))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -153,7 +153,7 @@ public class SearchActivity extends ActionBarActivity {
                                     .where("UserId = ?", searched_person_object_id)
                                     .execute();
                             Log.i("SONG SIZE", "" + songsList.size());
-                            adapter = new LazyAdapter(activity, songsList);
+                            adapter = new LazyAdapter(SearchActivity.this, songsList);
                             list.setAdapter(adapter);
                         }
 
@@ -265,9 +265,8 @@ public class SearchActivity extends ActionBarActivity {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                Intent intent = new Intent(getApplicationContext(), SearchActivity.class); new Intent();
-//                intent.putExtra("userId", v.getText());
-//                startActivity(intent);
+                searched_text = v.getText().toString();
+                pullFromParseWithRXJava(searched_text);
                 return false;
             }
         });
