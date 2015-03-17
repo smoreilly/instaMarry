@@ -100,8 +100,9 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search_bar.getWindowToken(), 0);
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class); new Intent();
-                intent.putExtra("userId", v.getText());
+                intent.putExtra("user_name", v.getText().toString());
                 startActivity(intent);
                 return false;
             }

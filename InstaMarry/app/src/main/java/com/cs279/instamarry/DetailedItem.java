@@ -15,6 +15,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
@@ -51,7 +52,9 @@ public class DetailedItem extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_detailed_item, menu);
+        if(post.getMy_artist().equals(ParseUser.getCurrentUser().getObjectId())) {
+            getMenuInflater().inflate(R.menu.menu_detailed_item, menu);
+        }
         return true;
     }
 

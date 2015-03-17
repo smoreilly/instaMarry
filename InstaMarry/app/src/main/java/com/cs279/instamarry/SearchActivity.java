@@ -1,5 +1,6 @@
 package com.cs279.instamarry;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,9 +29,11 @@ import com.facebook.model.GraphMultiResult;
 import com.facebook.model.GraphObject;
 import com.facebook.model.GraphObjectList;
 import com.facebook.model.GraphUser;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -57,6 +61,9 @@ public class SearchActivity extends ActionBarActivity {
     private ImageView imageView;
     private EditText search_bar;
     private List<Post> songsList;
+    private String searched_text;
+    private LazyAdapter adapter;
+    private String searched_person_object_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +71,29 @@ public class SearchActivity extends ActionBarActivity {
         list = (ListView) findViewById(R.id.search_person_list_view);
         imageView = (ImageView) findViewById(R.id.search_person_image_view);
         songsList = new ArrayList<>();
+        searched_text = getIntent().getStringExtra("user_name");
+        if(searched_text == null) {
+            searched_text = "";
+        }
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Intent intent = new Intent(view.getContext(), DetailedItem.class);
+                intent.putExtra("id", songsList.get(position).getMy_post_id());
+                startActivityForResult(intent, FragmentPersonalTab.VIEW_POST_REQUEST);
+            }
+        });
 
         Log.i("Pulling From Parse", "Pulling");
-        ParseFacebookUtils.initialize(getString(R.string.applicationId));
-        requestMyAppFacebookFriendsWithAppInstalled(ParseFacebookUtils.getSession());
-//        pullFromParseWithRXJava();
+        //Switch this activity to a fragment to use getActivity(). must pass this currently
+        // to getactivity for Lazyadapter
+        pullFromParseWithRXJava(this, searched_text);
+        //FOR USE WHEN WANT BETTER SUGGESTIONS FOR SEARCHES
+//        ParseFacebookUtils.initialize(getString(R.string.applicationId));
+//        requestMyAppFacebookFriendsWithAppInstalled(ParseFacebookUtils.getSession());
     }
 
     private void requestMyAppFacebookFriendsWithAppInstalled(Session session) {
@@ -76,9 +101,15 @@ public class SearchActivity extends ActionBarActivity {
             @Override
             public void onCompleted(List<GraphUser> graphUsers, Response response) {
                 Log.d("USERS", graphUsers.size() + "");
-                if(graphUsers.size() == 0) {
-                    Toast.makeText(getApplicationContext(), "No users currently", Toast.LENGTH_LONG).show();
+                List<GraphUser> suggestions = new ArrayList<GraphUser>();
+                for(GraphUser user : graphUsers) {
+                    if((user.getFirstName() + " " + user.getLastName()).contains(searched_text)) {
+//                        suggestions.add(user);
+                        // For Now just fill activity instead of doing suggestions first
+//                        pullFromParseWithRXJava(user.getId());
+                    }
                 }
+
             }
         }).executeAsync();
 
@@ -110,7 +141,72 @@ public class SearchActivity extends ActionBarActivity {
 //        friendsRequest.executeAsync();
     }
 
+    private void pullFromParseWithRXJava(Activity activity, String user_name){
+            Observable.from(getUserPosts(user_name))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<ParseObject>() {
+                        @Override
+                        public void onCompleted() {
+                            songsList = new Select()
+                                    .from(Post.class)
+                                    .where("UserId = ?", searched_person_object_id)
+                                    .execute();
+                            Log.i("SONG SIZE", "" + songsList.size());
+                            adapter = new LazyAdapter(activity, songsList);
+                            list.setAdapter(adapter);
+                        }
 
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d("SO", "Java RX Error: " + e);
+                        }
+
+                        @Override
+                        public void onNext(ParseObject parseObject) {
+                            Post post = new Post(parseObject.getObjectId(),
+                                    parseObject.getString("title"),
+                                    parseObject.getString("description"),
+                                    parseObject.getString("time"),
+                                    parseObject.getString("userId"),
+                                    ((ParseFile) parseObject.get("postImage")).getUrl());
+                            post.save();
+                        }
+                    });
+
+    }
+
+    private List<ParseObject> getUserPosts(String user_name){
+        try {
+            String[] names = user_name.split(" ");
+            ParseQuery<ParseUser> queryUsers = ParseQuery.getQuery(ParseUser.class);
+            queryUsers.whereEqualTo("firstName", names[0]);
+
+            List<ParseUser> parseUsers = queryUsers.find();
+            ParseQuery<ParseObject> queryPosts = ParseQuery.getQuery("Post");
+            if(parseUsers.size() >= 1) {
+                searched_person_object_id = parseUsers.get(0).getObjectId();
+                //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
+
+                List<Post> pList = new Select().
+                        from(Post.class).
+                        where("UserId = ?", searched_person_object_id)
+                        .execute();
+                for(Post p: pList) p.delete();
+
+                queryPosts.whereEqualTo("userId", searched_person_object_id);
+                return queryPosts.find();
+            } else {
+                Toast.makeText(this, "No user match", Toast.LENGTH_LONG).show();
+                return new ArrayList<ParseObject>();
+            }
+        }catch (ParseException err){
+            throw new RuntimeException();
+        }
+    }
+
+
+// Ignore Example Code below
 
 //    private Request createRequest(Session session) {
 ////        Request request = Request.newGraphPathRequest(session, "me/friends", null);
@@ -153,76 +249,6 @@ public class SearchActivity extends ActionBarActivity {
 //            //at times the flow enters this catch block. I could not figure out the reason for this.
 //        }
 //    }
-
-
-
-    private void pullFromParseWithRXJava(){
-//        Observable.from(getUserPosts())
-//                .flatMap(parseObject ->
-//                        Observable.just(parseObject).zipWith(
-//                                Observable.just(getFile(parseObject)).subscribeOn(Schedulers.io()),
-//                                Pair::create))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<Pair<ParseObject, byte[]>>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        songsList = new Select()
-//                                .from(Post.class)
-//                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
-//                                .execute();
-//                        adapter = new LazyAdapter(getActivity(), songsList);
-//                        list.setAdapter(adapter);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d("SO", "Java RX Error: " + e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(Pair<ParseObject, byte[]> pair) {
-//                        (new Post(pair.first.getObjectId(),
-//                                pair.first.getString("title"),
-//                                pair.first.getString("description"),
-//                                pair.first.getString("time"),
-//                                pair.first.getString("userId"),
-//                                pair.second)).save();
-//                    }
-//                });
-//        Observable.from(getUserPosts())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<ParseObject>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        songsList = new Select()
-//                                .from(Post.class)
-//                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
-//                                .execute();
-//                        Log.i("SONG SIZE", "" + songsList.size());
-//                        adapter = new LazyAdapter(getActivity(), songsList);
-//                        list.setAdapter(adapter);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d("SO", "Java RX Error: " + e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(ParseObject parseObject) {
-//                        Post post = new Post(parseObject.getObjectId(),
-//                                parseObject.getString("title"),
-//                                parseObject.getString("description"),
-//                                parseObject.getString("time"),
-//                                parseObject.getString("userId"),
-//                                ((ParseFile) parseObject.get("postImage")).getUrl());
-//                        post.save();
-//                    }
-//                });
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
