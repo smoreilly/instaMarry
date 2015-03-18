@@ -21,6 +21,7 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 
@@ -44,7 +45,7 @@ public class CreatePostActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
         ButterKnife.inject(this);
-
+        Log.d("TEST", "TEST");
         bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,32 +72,36 @@ public class CreatePostActivity extends ActionBarActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         byte[] data = stream.toByteArray();
-        final Post post = new Post("-1",
-                editTitle.getText().toString(),
-                descriptionText.getText().toString(),
-                now.format("%H:%M:%S"),
-                ParseUser.getCurrentUser().getObjectId(),
-                data);
+        String title = editTitle.getText().toString();
+        String description = descriptionText.getText().toString();
+        String time = now.format("%H:%M:%S");
+        String user = ParseUser.getCurrentUser().getObjectId();
         Log.d("SO","After Compression");
         final ParseFile file = new ParseFile("image.jpg", data);
         file.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 final ParseObject parsePost = new ParseObject("Post");
-                parsePost.put("title", post.getMy_title());
-                parsePost.put("description", post.getMy_description());
-                parsePost.put("time", post.getMy_time());
-                parsePost.put("userId", post.getMy_artist());
+                parsePost.put("title", title);
+                parsePost.put("description", description);
+                parsePost.put("time", time);
+                parsePost.put("userId", user);
                 parsePost.put("postImage", file);
                 parsePost.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        post.setMy_post_id(parsePost.getObjectId());
-                        post.save();
-                        Intent intent = new Intent();
-                        setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
-                        finish();
-                    }
+                        final Post post = new Post(parsePost.getObjectId(),
+                                title,
+                                description,
+                                time,
+                                user,
+                                ((ParseFile) parsePost.get("postImage")).getUrl() //can't set image_url until file saved on parse
+                        );
+                       post.save();
+                       Intent intent = new Intent();
+                       setResult(ProfileActivity.CREATE_POST_REQUEST, intent);
+                       finish();
+                   }
                 });
             }
         });
@@ -108,9 +113,9 @@ public class CreatePostActivity extends ActionBarActivity {
         if (resultCode != ProfileActivity.RESULT_CANCELED) {
             if (requestCode == RESULT_GALLERY) {
                 Uri selectedImage = data.getData();
+                Picasso.with(getApplicationContext()).load(selectedImage).into(imageView);
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                    imageView.setImageBitmap(bitmap);
                 }catch(Exception e){
                     Log.d("SO","Could not find file");
                 }

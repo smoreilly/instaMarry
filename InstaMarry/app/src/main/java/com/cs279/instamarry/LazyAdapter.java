@@ -7,12 +7,15 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class LazyAdapter extends BaseAdapter {
     
@@ -52,7 +55,9 @@ public class LazyAdapter extends BaseAdapter {
         title.setText(post.getMy_title());
         artist.setText(post.getMy_description());
         duration.setText(post.getMy_time());
-        thumb_image.setImageBitmap(post.getMy_image());
+
+        Log.d("THE URL IS FUDGE: ", post.getMy_image_url());
+        Picasso.with(activity.getApplicationContext()).load(post.getMy_image_url()).into(thumb_image);
         return vi;
     }
 }
