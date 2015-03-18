@@ -69,12 +69,11 @@ public class FragmentExploreTab extends Fragment {
                         getObjectId())
                 .execute();
         for(Post p: pList) p.delete();
-        Log.i("Pulling From Parse", "Pulling");
-        pullFromParseWithRXJava();
+        getUserFollowingPosts();
         return v;
     }
 
-    private void pullFromParseWithRXJava(){
+    private void getUserFollowingPosts(){
 
         Observable.from(ParseUser.getCurrentUser().getList("following"))
                 .flatMap(userId ->
@@ -124,6 +123,7 @@ public class FragmentExploreTab extends Fragment {
         }
     }
 
+    //TODO what does this do?
     public void addPost() {
         Log.i("TEST FOR CURSOR WINDOW", "BLAH");
         songsList = new Select().from(Post.class).execute();

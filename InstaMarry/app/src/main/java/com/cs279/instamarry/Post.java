@@ -13,8 +13,6 @@ import java.io.ByteArrayOutputStream;
  */
 
 public class Post extends Model{
-//    @Column(name = "Image")
-//    private byte[] my_image;
     @Column(name = "Title")
     private String my_title;
     @Column(name = "Description")

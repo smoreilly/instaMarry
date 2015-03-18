@@ -73,11 +73,11 @@ public class FragmentPersonalTab extends Fragment {
                 .execute();
         for(Post p: pList) p.delete();
         Log.i("Pulling From Parse", "Pulling");
-        pullFromParseWithRXJava();
+        getPosts();
         return v;
     }
 
-    private void pullFromParseWithRXJava(){
+    private void getPosts(){
         Observable.from(getUserPosts())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,7 +122,7 @@ public class FragmentPersonalTab extends Fragment {
         }
     }
 
-
+    //TODO what does this do?
     public void addPost() {
         Log.i("TEST FOR CURSOR WINDOW", "BLAH");
         songsList = new Select().from(Post.class).execute();

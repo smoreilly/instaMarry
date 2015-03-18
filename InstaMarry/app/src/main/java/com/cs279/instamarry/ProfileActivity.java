@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 //http://developer.android.com/training/implementing-navigation/lateral.html#horizontal-paging
 
+//TODO this is depreciated we need to change this
 public class ProfileActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private ViewPager viewPager;

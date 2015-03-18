@@ -37,7 +37,6 @@ public class DetailedItem extends ActionBarActivity {
         ButterKnife.inject(this);
 
         id = getIntent().getStringExtra("id");
-        Log.d("SODetail",id);
         post = new Select()
                 .from(Post.class)
                 .where("PostID = ?", id)
