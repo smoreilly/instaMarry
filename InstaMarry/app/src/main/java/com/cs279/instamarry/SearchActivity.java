@@ -186,6 +186,8 @@ public class SearchActivity extends ActionBarActivity {
             ParseQuery<ParseObject> queryPosts = ParseQuery.getQuery("Post");
             if(parseUsers.size() >= 1) {
                 searched_person_object_id = parseUsers.get(0).getObjectId();
+                ParseUser.getCurrentUser().addUnique("following", searched_person_object_id);
+                 ParseUser.getCurrentUser().saveInBackground();//Should be a button but just doing this for now
                 //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
 
                 List<Post> pList = new Select().
