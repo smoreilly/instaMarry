@@ -78,39 +78,6 @@ public class FragmentPersonalTab extends Fragment {
     }
 
     private void pullFromParseWithRXJava(){
-//        Observable.from(getUserPosts())
-//                .flatMap(parseObject ->
-//                        Observable.just(parseObject).zipWith(
-//                                Observable.just(getFile(parseObject)).subscribeOn(Schedulers.io()),
-//                                Pair::create))
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<Pair<ParseObject, byte[]>>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        songsList = new Select()
-//                                .from(Post.class)
-//                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
-//                                .execute();
-//                        adapter = new LazyAdapter(getActivity(), songsList);
-//                        list.setAdapter(adapter);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d("SO", "Java RX Error: " + e);
-//                    }
-//
-//                    @Override
-//                    public void onNext(Pair<ParseObject, byte[]> pair) {
-//                        (new Post(pair.first.getObjectId(),
-//                                pair.first.getString("title"),
-//                                pair.first.getString("description"),
-//                                pair.first.getString("time"),
-//                                pair.first.getString("userId"),
-//                                pair.second)).save();
-//                    }
-//                });
         Observable.from(getUserPosts())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -155,15 +122,6 @@ public class FragmentPersonalTab extends Fragment {
         }
     }
 
-    private String getFile(ParseObject parseObject){
-//        try {
-//            ((ParseFile) parseObject.get("postImage")).getData();
-            return ((ParseFile) parseObject.get("postImage")).getUrl();
-//        }
-//        }catch(ParseException err){
-//            throw new RuntimeException();
-//        }
-    }
 
     public void addPost() {
         Log.i("TEST FOR CURSOR WINDOW", "BLAH");

@@ -56,7 +56,7 @@ public class FragmentExploreTab extends Fragment {
                                     int position, long id) {
                 Intent intent = new Intent(getActivity(), DetailedItem.class);
                 intent.putExtra("id", songsList.get(position).getMy_post_id());
-                //start detaileditem without delete or edit options!!!
+                startActivity(intent);
             }
         });
         songsList = new ArrayList<Post>();
