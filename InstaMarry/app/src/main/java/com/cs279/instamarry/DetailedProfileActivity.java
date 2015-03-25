@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import rx.schedulers.Schedulers;
 public class DetailedProfileActivity extends ActionBarActivity {
     @InjectView(R.id.detail_profile_list) ListView list;
     @InjectView(R.id.detail_profile_name) TextView name;
+    @InjectView(R.id.follow_button) Button follow_button;
     LazyAdapter adapter;
 
     String user_id;
@@ -45,12 +47,27 @@ public class DetailedProfileActivity extends ActionBarActivity {
         ButterKnife.inject(this);
         user_id = getIntent().getStringExtra("id");
 
+        if(user_id.equals(ParseUser.getCurrentUser().getObjectId())){
+            Log.d("SO", "ID's are the same and it didn't work");
+            follow_button.setVisibility(View.GONE);
+        } else {
+            follow_button.setVisibility(View.VISIBLE);
+        }
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DetailedItem.class);
                 intent.putExtra("id", post_list.get(position).getMy_post_id());
                 startActivity(intent);
+            }
+        });
+
+        follow_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.getCurrentUser().addUnique("following", user_id);
+                ParseUser.getCurrentUser().saveInBackground();
             }
         });
 
