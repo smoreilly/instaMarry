@@ -49,6 +49,7 @@ public class Login extends ActionBarActivity {
                         pUser.put("firstName", user.getFirstName());
                         pUser.put("lastName", user.getLastName());
                         pUser.put("facebook_id", user.getId());
+                        pUser.addAllUnique("following", Arrays.asList());
                         pUser.saveInBackground();
                         if (pUser == null) {
                             Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");

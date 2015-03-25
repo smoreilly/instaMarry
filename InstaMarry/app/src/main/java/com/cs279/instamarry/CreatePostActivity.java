@@ -70,7 +70,7 @@ public class CreatePostActivity extends ActionBarActivity {
         now.setToNow();
         Log.d("SO", "Before compression");
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream);
         byte[] data = stream.toByteArray();
         String title = editTitle.getText().toString();
         String description = descriptionText.getText().toString();

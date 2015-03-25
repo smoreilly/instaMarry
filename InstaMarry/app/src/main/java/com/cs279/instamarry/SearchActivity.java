@@ -53,10 +53,6 @@ import rx.schedulers.Schedulers;
  * Created by pauljs on 3/16/2015.
  */
 public class SearchActivity extends ActionBarActivity {
-
-//    @InjectView(R.id.search_person_list_view)ListView list;
-//    @InjectView(R.id.search_person_image_view)ImageView imageView;
-//    @InjectView(R.id.editText_person_search)EditText search_bar;
     private ListView list;
     private ImageView imageView;
     private EditText search_bar;
@@ -90,7 +86,7 @@ public class SearchActivity extends ActionBarActivity {
         Log.i("Pulling From Parse", "Pulling");
         //Switch this activity to a fragment to use getActivity(). must pass this currently
         // to getactivity for Lazyadapter
-        pullFromParseWithRXJava(searched_text);
+        search(searched_text);
         //FOR USE WHEN WANT BETTER SUGGESTIONS FOR SEARCHES
 //        ParseFacebookUtils.initialize(getString(R.string.applicationId));
 //        requestMyAppFacebookFriendsWithAppInstalled(ParseFacebookUtils.getSession());
@@ -141,7 +137,7 @@ public class SearchActivity extends ActionBarActivity {
 //        friendsRequest.executeAsync();
     }
 
-    private void pullFromParseWithRXJava(String user_name){
+    private void search(String user_name){
             Observable.from(getUserPosts(user_name))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -186,6 +182,8 @@ public class SearchActivity extends ActionBarActivity {
             ParseQuery<ParseObject> queryPosts = ParseQuery.getQuery("Post");
             if(parseUsers.size() >= 1) {
                 searched_person_object_id = parseUsers.get(0).getObjectId();
+                ParseUser.getCurrentUser().addUnique("following", searched_person_object_id);
+                 ParseUser.getCurrentUser().saveInBackground();//Should be a button but just doing this for now
                 //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
 
                 List<Post> pList = new Select().
@@ -266,7 +264,7 @@ public class SearchActivity extends ActionBarActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 searched_text = v.getText().toString();
-                pullFromParseWithRXJava(searched_text);
+                search(searched_text);
                 return false;
             }
         });
