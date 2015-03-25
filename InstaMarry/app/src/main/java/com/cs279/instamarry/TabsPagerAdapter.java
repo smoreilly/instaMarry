@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  * Created by pauljs on 1/29/2015.
  * With help from http://www.androidhive.info/2013/10/android-tab-layout-with-swipeable-views-1/
  */
+
 public class TabsPagerAdapter extends FragmentPagerAdapter {
     private FragmentExploreTab fragExplore;
     private FragmentPersonalTab fragPersonal;

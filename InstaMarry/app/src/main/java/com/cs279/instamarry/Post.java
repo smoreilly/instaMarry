@@ -5,18 +5,14 @@ import android.graphics.BitmapFactory;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
 
 /**
  * Created by Sean on 2/4/2015.
  */
 
 public class Post extends Model{
-    @Column(name = "Image")
-    private byte[] my_image;
     @Column(name = "Title")
     private String my_title;
     @Column(name = "Description")
@@ -26,7 +22,9 @@ public class Post extends Model{
     @Column(name = "Time")
     private String my_time;
     @Column(name = "UserId")
-    private String my_artist;
+    private String my_userId;
+    @Column(name = "ImageURL")
+    private String my_image_url;
 
     public Post(){
         super();
@@ -35,26 +33,21 @@ public class Post extends Model{
     public void setMy_post_id(String my_post_id) {
         this.my_post_id = my_post_id;
     }
-
-    public Post(String post_id, String title, String description, String time, String artist, Bitmap bitmap){
-        super();
-        my_post_id = post_id;
-        my_title = title;
-        my_description = description;
-        my_time = time;
-        my_artist = artist;
-        my_image = Post.convertBitmapToByteArrayOS(bitmap);
-
+    public void setMy_image_url(String my_image_url) {
+        this.my_image_url = my_image_url;
+    }
+    public String getMy_image_url() {
+        return my_image_url;
     }
 
-    public Post(String post_id, String title, String description, String time, String artist, byte[] bitmap){
+    public Post(String post_id, String title, String description, String time, String userId, String image_url){
         super();
         my_post_id = post_id;
         my_title = title;
         my_description = description;
         my_time = time;
-        my_artist = artist;
-        my_image = bitmap;
+        my_userId = userId;
+        my_image_url = image_url; //can't set image_url until file saved on parse
 
     }
 
@@ -76,18 +69,8 @@ public class Post extends Model{
         return my_post_id;
     }
 
-    public String getMy_artist() {
-        return my_artist;
-    }
-
-    public void editMy_image(byte [] image){ my_image = image; }
-
-    public void editMy_image(Bitmap image){
-        my_image = Post.convertBitmapToByteArrayOS(image);
-    }
-
-    public Bitmap getMy_image(){
-        return Post.convertByteArrayToBitmap(my_image);
+    public String getMy_userId() {
+        return my_userId;
     }
 
     public void editMy_Title(String title){

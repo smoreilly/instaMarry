@@ -10,10 +10,5 @@
         app:showAsAction="always|collapseActionView"
         android:icon="@android:drawable/ic_menu_search"
         app:actionLayout="@layout/search_layout"/>
-    <item android:id="@+id/add"
-        android:title="add"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_add" />
-
 
 </menu>

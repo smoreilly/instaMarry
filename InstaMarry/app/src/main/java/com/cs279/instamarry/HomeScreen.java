@@ -15,17 +15,7 @@ public class HomeScreen extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Parse.initialize(this, "RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp", "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
-        //Added so we can simulate a new user every time
-        /*ParseUser.logOut();
-        com.facebook.Session fbs = com.facebook.Session.getActiveSession();
-        if (fbs == null) {
-            fbs = new com.facebook.Session(this);
-            com.facebook.Session.setActiveSession(fbs);
-        }
-        fbs.closeAndClearTokenInformation();*/
-        //end addition
-
+        Parse.initialize(this, getString(R.string.applicationId), "qWXtduM6NlaffGawHe4CJS9aOWHtfb611KGG0oyi");
         ParseUser user = ParseUser.getCurrentUser();
         Intent intent;
         if(user != null){
@@ -35,26 +25,6 @@ public class HomeScreen extends ActionBarActivity {
         }
         startActivity(intent);
         finish();
-    }
-
-
-    public void facebookLogin(final View v) {
-        ParseFacebookUtils.logIn(this, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException err) {
-                if (user == null) {
-                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                } else if (user.isNew()) {
-                    Log.d("MyApp", "User signed up and logged in through Facebook!");
-                    Intent intent = new Intent(v.getContext(), ProfileActivity.class);
-                    startActivity(intent);
-                } else {
-                    Log.d("MyApp", "User logged in through Facebook!");
-                    Intent intent = new Intent(v.getContext(), ProfileActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
     }
 
     @Override

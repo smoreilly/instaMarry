@@ -37,9 +37,8 @@ public class Login extends ActionBarActivity {
         });
     }
 
-
     public void facebookLogin(final View v){
-        List<String> permissions = Arrays.asList("public_profile", "user_about_me", "email");
+        List<String> permissions = Arrays.asList("public_profile", "user_about_me", "email", "user_friends");
         ParseFacebookUtils.logIn(permissions,this, new LogInCallback() {
             @Override
             public void done(final ParseUser pUser, ParseException err) {
@@ -49,6 +48,8 @@ public class Login extends ActionBarActivity {
                         pUser.put("email",user.getProperty("email").toString());
                         pUser.put("firstName", user.getFirstName());
                         pUser.put("lastName", user.getLastName());
+                        pUser.put("facebook_id", user.getId());
+                        pUser.addAllUnique("following", Arrays.asList());
                         pUser.saveInBackground();
                         if (pUser == null) {
                             Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
