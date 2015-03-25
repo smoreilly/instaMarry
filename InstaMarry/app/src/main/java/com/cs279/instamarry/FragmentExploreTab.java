@@ -107,8 +107,6 @@ public class FragmentExploreTab extends Fragment {
                         songsList.add(post);
                     }
                 });
-
-
     }
 
 

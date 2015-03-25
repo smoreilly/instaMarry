@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.ParseUser;
+
 //http://developer.android.com/training/implementing-navigation/lateral.html#horizontal-paging
 
 //TODO this is depreciated we need to change this
@@ -126,6 +128,10 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
         } else if (id == R.id.searchPerson) {
             search_bar.requestFocus();
             ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }else if (id ==R.id.action_profile) {
+            Intent intent = new Intent(this, DetailedProfileActivity.class);
+            intent.putExtra("id", ParseUser.getCurrentUser().getObjectId());
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

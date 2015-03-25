@@ -12,4 +12,7 @@
     <string name="app_id">1574501699459233</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="applicationId">RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp</string>
+    <string name="title_activity_detailed_profile">DetailedProfileActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

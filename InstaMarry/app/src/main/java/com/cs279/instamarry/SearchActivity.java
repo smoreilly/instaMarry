@@ -110,31 +110,6 @@ public class SearchActivity extends ActionBarActivity {
         }).executeAsync();
 
 
-// Ignore Example Code below
-//        Request friendsRequest = createRequest(session);
-//        friendsRequest.setCallback(new Request.Callback() {
-//            @Override
-//            public void onCompleted(Response response) {
-//                //SetUpList
-//                List<GraphUser> friends = getResults(response);
-//                GraphUser user;
-//                boolean installed = false;
-//                if (friends != null) {
-//                    Log.d("FRIENDS NOT NULL", "" + friends.size());
-//                    for (int count = 0; count < friends.size(); count++) {
-//                        user = friends.get(count);
-//                        Log.i("FRIENDS", user.getFirstName() + user.getLastName());
-//                        if (user.getProperty("installed") != null) {
-//                            installed = (Boolean) user.getProperty("installed");
-//                            Log.i("Ideal Installed? YES ", "user: " + user.getInnerJSONObject());
-//                        }
-//                    }
-//                } else {
-//                    Log.d("FRIENDS NULL", "WAH");
-//                }
-//            }
-//        });
-//        friendsRequest.executeAsync();
     }
 
     private void search(String user_name){
@@ -203,50 +178,6 @@ public class SearchActivity extends ActionBarActivity {
         }
     }
 
-
-// Ignore Example Code below
-
-//    private Request createRequest(Session session) {
-////        Request request = Request.newGraphPathRequest(session, "me/friends", null);
-////        Request request = Request.newMeRequest()
-//        Bundle params = new Bundle();
-//        params.putString("fields", "id,name,installed");
-////        Request request = new Request(session, "me/friends", params, HttpMethod.GET);
-////        Set<String> fields = new HashSet<String>();
-////        String[] requiredFields = new String[] { "id", "name", "picture","hometown",
-////                "installed" };
-////        fields.addAll(Arrays.asList(requiredFields));
-//
-////        Bundle parameters = request.getParameters();
-////        parameters.putString("fields", TextUtils.join(",", fields));
-////        request.setParameters(parameters);
-//
-//        return request;
-//    }
-
-
-
-//    private class FB_FriendsListStructure
-//    {
-//        String Name,ID,ImageUrl;
-//        boolean selected;
-//    }
-//
-//
-//    private List<GraphUser> getResults(Response response) throws NullPointerException
-//    {
-//        try{
-//            GraphMultiResult multiResult = response
-//                    .getGraphObjectAs(GraphMultiResult.class);
-//            GraphObjectList<GraphObject> data = multiResult.getData();
-//            return data.castToListOf(GraphUser.class);
-//        }
-//        catch(NullPointerException e)
-//        {
-//            return null;
-//            //at times the flow enters this catch block. I could not figure out the reason for this.
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
