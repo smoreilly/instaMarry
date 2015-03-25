@@ -58,7 +58,7 @@ public class DetailedProfileActivity extends ActionBarActivity {
         queryUsers.getInBackground(user_id, new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
-                name.setText(parseUser.getString("firstName") + parseUser.getString("lastName"));
+                name.setText(parseUser.getString("firstName") + " " + parseUser.getString("lastName"));
             }
         });
         getPosts();

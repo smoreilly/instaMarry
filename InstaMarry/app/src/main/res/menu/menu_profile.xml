@@ -10,8 +10,7 @@
     <item android:id="@+id/searchPerson"
         android:title="search"
         app:showAsAction="always|collapseActionView"
-        android:icon="@android:drawable/ic_menu_search"
-        app:actionLayout="@layout/search_layout"/>
+        android:icon="@android:drawable/ic_menu_search"/>
     <item android:id="@+id/add"
         android:title="add"
         app:showAsAction="ifRoom"

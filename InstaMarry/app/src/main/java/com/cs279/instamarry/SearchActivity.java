@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -53,10 +55,11 @@ import rx.schedulers.Schedulers;
  * Created by pauljs on 3/16/2015.
  */
 public class SearchActivity extends ActionBarActivity {
-    private ListView list;
+    private ListView listView;
     private ImageView imageView;
     private EditText search_bar;
-    private List<Post> songsList;
+    private List<String> names;
+    private List<ParseUser> usersList;
     private String searched_text;
     private LazyAdapter adapter;
     private String searched_person_object_id;
@@ -64,29 +67,28 @@ public class SearchActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        list = (ListView) findViewById(R.id.search_person_list_view);
-        imageView = (ImageView) findViewById(R.id.search_person_image_view);
-        songsList = new ArrayList<>();
-        searched_text = getIntent().getStringExtra("user_name");
-        if(searched_text == null) {
-            searched_text = "";
-        }
+        listView = (ListView) findViewById(R.id.search_person_list_view);
+        names = new ArrayList<String>();
+        usersList = new ArrayList<>();
+//        if(searched_text == null) {
+//            searched_text = "";
+//        }
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Intent intent = new Intent(view.getContext(), DetailedItem.class);
-                intent.putExtra("id", songsList.get(position).getMy_post_id());
-                startActivityForResult(intent, FragmentPersonalTab.VIEW_POST_REQUEST);
+                Intent intent = new Intent(view.getContext(), DetailedProfileActivity.class);
+                intent.putExtra("id", usersList.get(position).getObjectId());
+                startActivity(intent);
             }
         });
 
         Log.i("Pulling From Parse", "Pulling");
         //Switch this activity to a fragment to use getActivity(). must pass this currently
         // to getactivity for Lazyadapter
-        search(searched_text);
+//        search(searched_text);
         //FOR USE WHEN WANT BETTER SUGGESTIONS FOR SEARCHES
 //        ParseFacebookUtils.initialize(getString(R.string.applicationId));
 //        requestMyAppFacebookFriendsWithAppInstalled(ParseFacebookUtils.getSession());
@@ -108,24 +110,18 @@ public class SearchActivity extends ActionBarActivity {
 
             }
         }).executeAsync();
-
-
     }
 
     private void search(String user_name){
-            Observable.from(getUserPosts(user_name))
+            Observable.from(getParseUsers(user_name))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<ParseObject>() {
+                    .subscribe(new Subscriber<ParseUser>() {
                         @Override
                         public void onCompleted() {
-                            songsList = new Select()
-                                    .from(Post.class)
-                                    .where("UserId = ?", searched_person_object_id)
-                                    .execute();
-                            Log.i("SONG SIZE", "" + songsList.size());
-                            adapter = new LazyAdapter(SearchActivity.this, songsList);
-                            list.setAdapter(adapter);
+                            ArrayAdapter adapter = new ArrayAdapter(SearchActivity.this,
+                                    android.R.layout.simple_list_item_1, names);
+                            listView.setAdapter(adapter);
                         }
 
                         @Override
@@ -134,50 +130,34 @@ public class SearchActivity extends ActionBarActivity {
                         }
 
                         @Override
-                        public void onNext(ParseObject parseObject) {
-                            Post post = new Post(parseObject.getObjectId(),
-                                    parseObject.getString("title"),
-                                    parseObject.getString("description"),
-                                    parseObject.getString("time"),
-                                    parseObject.getString("userId"),
-                                    ((ParseFile) parseObject.get("postImage")).getUrl());
-                            post.save();
+                        public void onNext(ParseUser parseUser) {
+                            usersList.add(parseUser);
+                            names.add(parseUser.get("firstName") + " " + parseUser.get("lastName"));
                         }
                     });
 
+
     }
 
-    private List<ParseObject> getUserPosts(String user_name){
+    private List<ParseUser> getParseUsers(String user_name){
         try {
             String[] names = user_name.split(" ");
             ParseQuery<ParseUser> queryUsers = ParseQuery.getQuery(ParseUser.class);
             queryUsers.whereEqualTo("firstName", names[0]);
-
+            if(names.length > 1) {
+                queryUsers.whereEqualTo("lastName", names[1]);
+            }
             List<ParseUser> parseUsers = queryUsers.find();
-            ParseQuery<ParseObject> queryPosts = ParseQuery.getQuery("Post");
             if(parseUsers.size() >= 1) {
-                searched_person_object_id = parseUsers.get(0).getObjectId();
-                ParseUser.getCurrentUser().addUnique("following", searched_person_object_id);
-                 ParseUser.getCurrentUser().saveInBackground();//Should be a button but just doing this for now
-                //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
-
-                List<Post> pList = new Select().
-                        from(Post.class).
-                        where("UserId = ?", searched_person_object_id)
-                        .execute();
-                for(Post p: pList) p.delete();
-
-                queryPosts.whereEqualTo("userId", searched_person_object_id);
-                return queryPosts.find();
+                return parseUsers;
             } else {
                 Toast.makeText(this, "No user match", Toast.LENGTH_LONG).show();
-                return new ArrayList<ParseObject>();
+                return new ArrayList<ParseUser>();
             }
         }catch (ParseException err){
             throw new RuntimeException();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -199,6 +179,7 @@ public class SearchActivity extends ActionBarActivity {
                 return false;
             }
         });
+        onOptionsItemSelected(menu.findItem(R.id.searchPerson));
         return true;
     }
 
@@ -208,6 +189,7 @@ public class SearchActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.searchPerson) {
+            item.expandActionView();
             search_bar.requestFocus();
             ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
