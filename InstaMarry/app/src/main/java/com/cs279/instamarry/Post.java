@@ -53,7 +53,7 @@ public class Post extends Model{
 
     public static byte[] convertBitmapToByteArrayOS(Bitmap bitmap) {
         ByteArrayOutputStream bs = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bs);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 3, bs);
         return bs.toByteArray();
     }
 
