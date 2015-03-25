@@ -25,3 +25,6 @@ https://drive.google.com/folderview?id=0B5o9rUXO3ZkeeDlYQnBya0pOM3c&usp=sharing
 
 ##Trello Link
 https://trello.com/b/rfy2laq5
+
+##Download the APK File!
+http://goo.gl/YGoeSX
