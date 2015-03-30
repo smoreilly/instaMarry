@@ -1,7 +1,9 @@
 package com.cs279.instamarry;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +37,9 @@ public class FragmentPersonalTab extends Fragment {
     static final int DELETE_POST_REQUEST = 2;
     @InjectView(R.id.personal_list)
     RecyclerView list;
+
+    @InjectView(R.id.personal_refresh)
+    SwipeRefreshLayout refresh;
     PostAdapter adapter;
     private List<Post> personalPosts;
 
@@ -51,6 +56,14 @@ public class FragmentPersonalTab extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_personal_tab_layout, container, false);
         ButterKnife.inject(this, v);
+
+        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
+        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                update();
+            }
+        });
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         list.setItemAnimator(new DefaultItemAnimator());
         update();
@@ -77,6 +90,7 @@ public class FragmentPersonalTab extends Fragment {
                     public void onCompleted() {
                         adapter = new PostAdapter(personalPosts, R.layout.post_card, getActivity());
                         list.setAdapter(adapter);
+                        refresh.setRefreshing(false);
                     }
 
                     @Override

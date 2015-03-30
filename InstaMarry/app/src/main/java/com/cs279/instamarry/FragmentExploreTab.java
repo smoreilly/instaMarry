@@ -1,5 +1,6 @@
 package com.cs279.instamarry;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -51,7 +52,7 @@ public class FragmentExploreTab extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_explore_tab_layout, container, false);
         ButterKnife.inject(this, v);
-        refresh.setColo
+        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
 
         refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
