@@ -5,16 +5,10 @@
 
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_profile" android:title="Profile"
-        app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_view"></item>
     <item android:id="@+id/searchPerson"
         android:title="search"
         app:showAsAction="always|collapseActionView"
-        android:icon="@android:drawable/ic_menu_search"/>
-    <item android:id="@+id/add"
-        android:title="add"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_add" />
-
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionLayout="@layout/search_layout"/>
 
 </menu>
