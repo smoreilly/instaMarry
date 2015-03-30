@@ -1,8 +1,14 @@
 package com.cs279.instamarry;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +26,9 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -32,10 +40,12 @@ import rx.schedulers.Schedulers;
 
 
 public class DetailedProfileActivity extends ActionBarActivity {
-    @InjectView(R.id.detail_profile_list) ListView list;
+    @InjectView(R.id.detail_profile_list)RecyclerView list;
     @InjectView(R.id.detail_profile_name) TextView name;
     @InjectView(R.id.follow_button) Button follow_button;
-    LazyAdapter adapter;
+    @InjectView(R.id.detailed_profile_refresh)
+    SwipeRefreshLayout refresh;
+    PostAdapter adapter;
 
     String user_id;
     List <Post> post_list;
@@ -46,30 +56,21 @@ public class DetailedProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detailed_profile);
         ButterKnife.inject(this);
         user_id = getIntent().getStringExtra("id");
+        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
+        refresh.setOnRefreshListener(this::getPosts);
+
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setItemAnimator(new DefaultItemAnimator());
 
         if(user_id.equals(ParseUser.getCurrentUser().getObjectId())){
-            Log.d("SO", "ID's are the same and it didn't work");
             follow_button.setVisibility(View.GONE);
         } else {
             follow_button.setVisibility(View.VISIBLE);
+            setFollowing();
         }
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), DetailedItem.class);
-                intent.putExtra("id", post_list.get(position).getMy_post_id());
-                startActivity(intent);
-            }
-        });
 
-        follow_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.getCurrentUser().addUnique("following", user_id);
-                ParseUser.getCurrentUser().saveInBackground();
-            }
-        });
+
 
         ParseQuery<ParseUser> queryUsers = ParseQuery.getQuery(ParseUser.class);
         queryUsers.getInBackground(user_id, new GetCallback<ParseUser>() {
@@ -93,7 +94,6 @@ public class DetailedProfileActivity extends ActionBarActivity {
     }
 
     private void getPosts(){
-
                 Observable.from(getUserPosts(user_id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -104,8 +104,9 @@ public class DetailedProfileActivity extends ActionBarActivity {
                                 .from(Post.class)
                                 .where("UserId = ?", user_id)
                                 .execute();
-                        adapter = new LazyAdapter(DetailedProfileActivity.this, post_list);
+                        adapter = new PostAdapter(post_list, R.layout.post_card, DetailedProfileActivity.this);
                         list.setAdapter(adapter);
+                        refresh.setRefreshing(false);
                     }
 
                     @Override
@@ -133,7 +134,37 @@ public class DetailedProfileActivity extends ActionBarActivity {
 
     }
 
-
+    private void setFollowing(){
+        if (ParseUser.getCurrentUser().getList("following").contains(user_id)){
+            follow_button.setText("UnFollow");
+            follow_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ParseUser.getCurrentUser().removeAll("following", Arrays.asList(user_id));
+                    ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            setFollowing();
+                        }
+                    });
+                }
+            });
+        } else {
+            follow_button.setText("Follow");
+            follow_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ParseUser.getCurrentUser().addUnique("following", user_id);
+                    ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            setFollowing();
+                        }
+                    });
+                }
+            });
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
