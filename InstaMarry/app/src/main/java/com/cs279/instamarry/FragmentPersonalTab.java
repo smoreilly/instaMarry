@@ -62,6 +62,11 @@ public class FragmentPersonalTab extends Fragment {
                 startActivityForResult(intent, VIEW_POST_REQUEST);
             }
         });
+        update();
+        return v;
+    }
+
+    public void update(){
         songsList = new ArrayList<>();
 
         //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
@@ -74,7 +79,6 @@ public class FragmentPersonalTab extends Fragment {
         for(Post p: pList) p.delete();
         Log.i("Pulling From Parse", "Pulling");
         getPosts();
-        return v;
     }
 
     private void getPosts(){
@@ -84,11 +88,6 @@ public class FragmentPersonalTab extends Fragment {
                 .subscribe(new Subscriber<ParseObject>() {
                     @Override
                     public void onCompleted() {
-                        songsList = new Select()
-                                .from(Post.class)
-                                .where("UserId = ?", ParseUser.getCurrentUser().getObjectId())
-                                .execute();
-                        Log.i("SONG SIZE", "" + songsList.size());
                         adapter = new LazyAdapter(getActivity(), songsList);
                         list.setAdapter(adapter);
                     }
@@ -107,6 +106,7 @@ public class FragmentPersonalTab extends Fragment {
                                 parseObject.getString("userId"),
                                 ((ParseFile) parseObject.get("postImage")).getUrl());
                         post.save();
+                        songsList.add(post);
                     }
                 });
 
@@ -122,7 +122,7 @@ public class FragmentPersonalTab extends Fragment {
         }
     }
 
-    //TODO what does this do?
+/*    //TODO what does this do?
     public void addPost() {
         Log.i("TEST FOR CURSOR WINDOW", "BLAH");
         songsList = new Select().from(Post.class).execute();
@@ -137,4 +137,5 @@ public class FragmentPersonalTab extends Fragment {
         adapter = new LazyAdapter(getActivity(), songsList);
         list.setAdapter(adapter);
     }
+    */
 }

@@ -3,6 +3,9 @@ package com.cs279.instamarry;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +35,9 @@ import rx.schedulers.Schedulers;
  * Created by pauljs on 1/28/2015.
  */
 public class FragmentExploreTab extends Fragment {
-    @InjectView(R.id.exploreListView1) ListView list;
-    LazyAdapter adapter;
+    @InjectView(R.id.explore_list)
+    RecyclerView list;
+    PostAdapter adapter;
     private List<Post> songsList;
 
 
@@ -49,6 +53,10 @@ public class FragmentExploreTab extends Fragment {
         View v = inflater.inflate(R.layout.fragment_explore_tab_layout, container, false);
         ButterKnife.inject(this, v);
 
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        list.setItemAnimator(new DefaultItemAnimator());
+
+        /*
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -58,19 +66,23 @@ public class FragmentExploreTab extends Fragment {
                 intent.putExtra("id", songsList.get(position).getMy_post_id());
                 startActivity(intent);
             }
-        });
+        });*/
+        update();
+        return v;
+    }
+
+    public void update(){
         songsList = new ArrayList<Post>();
 
         //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
 
         List<Post> pList = new Select().
                 from(Post.class).
-                where("UserId = ?", ParseUser.getCurrentUser().
+                where("UserId != ?", ParseUser.getCurrentUser().
                         getObjectId())
                 .execute();
         for(Post p: pList) p.delete();
         getUserFollowingPosts();
-        return v;
     }
 
     private void getUserFollowingPosts(){
@@ -86,7 +98,7 @@ public class FragmentExploreTab extends Fragment {
                 .subscribe(new Subscriber<ParseObject>() {
                     @Override
                     public void onCompleted() {
-                        adapter = new LazyAdapter(getActivity(), songsList);
+                        adapter = new PostAdapter(songsList, R.layout.post_card, getActivity());
                         list.setAdapter(adapter);
                     }
 
@@ -126,7 +138,7 @@ public class FragmentExploreTab extends Fragment {
         Log.i("TEST FOR CURSOR WINDOW", "BLAH");
         songsList = new Select().from(Post.class).execute();
         Log.i("TEST FOR CURSOR WINDOW", "BLAH2");
-        adapter = new LazyAdapter(getActivity(), songsList);
+        adapter = new PostAdapter(songsList, R.layout.post_card, getActivity());
         list.setAdapter(adapter);
     }
 
