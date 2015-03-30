@@ -102,6 +102,4 @@ public class DetailedItem extends ActionBarActivity {
         Intent intent = new Intent(this, ProfileActivity.class);
         setResult(FragmentPersonalTab.DELETE_POST_REQUEST, intent);
     }
-
-
 }

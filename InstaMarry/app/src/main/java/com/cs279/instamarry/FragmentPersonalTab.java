@@ -1,16 +1,14 @@
 package com.cs279.instamarry;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.activeandroid.query.Select;
 import com.parse.ParseException;
@@ -35,9 +33,11 @@ import rx.schedulers.Schedulers;
 public class FragmentPersonalTab extends Fragment {
     static final int VIEW_POST_REQUEST = 1;
     static final int DELETE_POST_REQUEST = 2;
-    @InjectView(R.id.exploreListView)ListView list;
-    LazyAdapter adapter;
-    private List<Post> songsList;
+    @InjectView(R.id.personal_list)
+    RecyclerView list;
+    PostAdapter adapter;
+    private List<Post> personalPosts;
+
 
 
     @Override
@@ -51,33 +51,20 @@ public class FragmentPersonalTab extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_personal_tab_layout, container, false);
         ButterKnife.inject(this, v);
-
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Intent intent = new Intent(getActivity(), DetailedItem.class);
-                intent.putExtra("id", songsList.get(position).getMy_post_id());
-                startActivityForResult(intent, VIEW_POST_REQUEST);
-            }
-        });
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        list.setItemAnimator(new DefaultItemAnimator());
         update();
         return v;
     }
 
     public void update(){
-        songsList = new ArrayList<>();
-
-        //TODO fix this so is only updates on pull to refresh and when first created. Not on every screen change
-
+        personalPosts = new ArrayList<>();
         List<Post> pList = new Select().
                 from(Post.class).
                 where("UserId = ?", ParseUser.getCurrentUser().
                         getObjectId())
                 .execute();
         for(Post p: pList) p.delete();
-        Log.i("Pulling From Parse", "Pulling");
         getPosts();
     }
 
@@ -88,13 +75,13 @@ public class FragmentPersonalTab extends Fragment {
                 .subscribe(new Subscriber<ParseObject>() {
                     @Override
                     public void onCompleted() {
-                        adapter = new LazyAdapter(getActivity(), songsList);
+                        adapter = new PostAdapter(personalPosts, R.layout.post_card, getActivity());
                         list.setAdapter(adapter);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("SO", "Java RX Error: " + e);
+                        Log.d("SO", "Error in Personal Tab");
                     }
 
                     @Override
@@ -106,7 +93,7 @@ public class FragmentPersonalTab extends Fragment {
                                 parseObject.getString("userId"),
                                 ((ParseFile) parseObject.get("postImage")).getUrl());
                         post.save();
-                        songsList.add(post);
+                        personalPosts.add(post);
                     }
                 });
 
@@ -121,21 +108,4 @@ public class FragmentPersonalTab extends Fragment {
             throw new RuntimeException();
         }
     }
-
-/*    //TODO what does this do?
-    public void addPost() {
-        Log.i("TEST FOR CURSOR WINDOW", "BLAH");
-        songsList = new Select().from(Post.class).execute();
-        Log.i("TEST FOR CURSOR WINDOW", "BLAH2");
-        adapter = new LazyAdapter(getActivity(), songsList);
-        list.setAdapter(adapter);
-    }
-
-
-    public void deletePost() {
-        songsList = new Select().from(Post.class).execute();
-        adapter = new LazyAdapter(getActivity(), songsList);
-        list.setAdapter(adapter);
-    }
-    */
 }

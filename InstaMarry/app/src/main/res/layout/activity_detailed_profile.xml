@@ -30,14 +30,10 @@
         android:layout_height="fill_parent"
         android:layout_weight="1">
 
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/detail_profile_list"
-            android:layout_gravity="center_horizontal"
-            android:divider="#b5b5b5"
-            android:dividerHeight="1dp"
-            android:listSelector="@drawable/list_selector"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             />
     </LinearLayout>
 
