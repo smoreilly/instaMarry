@@ -52,7 +52,7 @@ public class FragmentExploreTab extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_explore_tab_layout, container, false);
         ButterKnife.inject(this, v);
-        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
+        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
 
         refresh.setOnRefreshListener(() -> update());
 
