@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
@@ -73,7 +74,7 @@ public class DetailedProfileActivity extends ActionBarActivity {
     @InjectView(R.id.follow_button) Button follow_button;
     @InjectView(R.id.detailed_profile_refresh) SwipeRefreshLayout refresh;
     @InjectView(R.id.detailed_profile_picture) ImageView profile_pic;
-    @InjectView(R.id.profile_cardView) CardView profile_cardView;
+//    @InjectView(R.id.profile_cardView) CardView profile_cardView;
     PostAdapter adapter;
 
     String user_id;
@@ -255,15 +256,11 @@ public class DetailedProfileActivity extends ActionBarActivity {
                 return;
             }
             super.onPostExecute(s);
-//            profile_cardView.setCardBackgroundColor(getResources().getColor(android.R.color.transparent));
-//            profile_cardView.setRadius(50);
-//            profile_cardView.setBackground(getResources().getDrawable(R.drawable.profile_pic_placeholder));
-//            ImageView imageView = (ImageView) findViewById(R.id.im);
-//            Picasso.with(getApplicationContext()).load(s).into(imageView);
-//            LinearLayout layout = (LinearLayout) findViewById(R.id.activity_detailed_profile_layout);
-//            Log.i("IMAGE VIEW", imageView.getDrawable().toString());
-//            layout.setBackground(imageView.getDrawable());
-//            profile_cardView.setBackgroundDrawable(imageView.getDrawable());
+            ImageView imageView = (ImageView) findViewById(R.id.detailed_profile_imageView);
+            Point point = new Point();
+            getWindowManager().getDefaultDisplay().getSize(point);
+            LinearLayout layout = (LinearLayout) findViewById(R.id.activity_detailed_profile_layout);
+            Picasso.with(getApplicationContext()).load(s).resize(point.x, imageView.getHeight()).into(imageView);
         }
     }
 }

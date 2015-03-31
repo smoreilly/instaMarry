@@ -11,10 +11,13 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.format.Time;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -61,6 +64,14 @@ public class CreatePostActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 createPost();
+            }
+        });
+
+        descriptionText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                buttonPost.performClick();
+                return true;
             }
         });
     }
