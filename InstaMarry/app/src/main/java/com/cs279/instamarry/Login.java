@@ -1,5 +1,6 @@
 package com.cs279.instamarry;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class Login extends ActionBarActivity {
+public class Login extends Activity {
 
     @InjectView(R.id.authButton) Button authButton;
 
@@ -35,6 +36,7 @@ public class Login extends ActionBarActivity {
                 facebookLogin(v);
             }
         });
+        authButton.setBackgroundColor(getResources().getColor(R.color.OpaqueFacebookBlue));
     }
 
     public void facebookLogin(final View v){
