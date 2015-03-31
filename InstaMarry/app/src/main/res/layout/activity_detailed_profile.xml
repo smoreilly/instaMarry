@@ -30,11 +30,17 @@
         android:layout_height="fill_parent"
         android:layout_weight="1">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/detail_profile_list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/detailed_profile_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/detail_profile_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 

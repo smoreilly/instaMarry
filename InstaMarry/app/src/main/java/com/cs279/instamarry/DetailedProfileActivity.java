@@ -2,6 +2,8 @@ package com.cs279.instamarry;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -41,6 +43,8 @@ public class DetailedProfileActivity extends ActionBarActivity {
     @InjectView(R.id.detail_profile_list)RecyclerView list;
     @InjectView(R.id.detail_profile_name) TextView name;
     @InjectView(R.id.follow_button) Button follow_button;
+    @InjectView(R.id.detailed_profile_refresh)
+    SwipeRefreshLayout refresh;
     PostAdapter adapter;
 
     String user_id;
@@ -52,6 +56,8 @@ public class DetailedProfileActivity extends ActionBarActivity {
         setContentView(R.layout.activity_detailed_profile);
         ButterKnife.inject(this);
         user_id = getIntent().getStringExtra("id");
+        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
+        refresh.setOnRefreshListener(()-> getPosts());
 
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setItemAnimator(new DefaultItemAnimator());
@@ -100,6 +106,7 @@ public class DetailedProfileActivity extends ActionBarActivity {
                                 .execute();
                         adapter = new PostAdapter(post_list, R.layout.post_card, DetailedProfileActivity.this);
                         list.setAdapter(adapter);
+                        refresh.setRefreshing(false);
                     }
 
                     @Override

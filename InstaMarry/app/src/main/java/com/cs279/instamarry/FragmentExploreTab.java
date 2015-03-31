@@ -54,12 +54,7 @@ public class FragmentExploreTab extends Fragment {
         ButterKnife.inject(this, v);
         refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
 
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                update();
-            }
-        });
+        refresh.setOnRefreshListener(() -> update());
 
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         list.setItemAnimator(new DefaultItemAnimator());

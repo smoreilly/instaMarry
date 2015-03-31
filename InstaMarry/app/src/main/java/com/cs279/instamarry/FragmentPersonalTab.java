@@ -57,13 +57,8 @@ public class FragmentPersonalTab extends Fragment {
         View v = inflater.inflate(R.layout.fragment_personal_tab_layout, container, false);
         ButterKnife.inject(this, v);
 
-        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
-        refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                update();
-            }
-        });
+        refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
+        refresh.setOnRefreshListener(()-> update());
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         list.setItemAnimator(new DefaultItemAnimator());
         update();
