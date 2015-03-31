@@ -2,10 +2,16 @@ package com.cs279.instamarry;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,21 +21,43 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.activeandroid.query.Select;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NavigableMap;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -41,10 +69,11 @@ import rx.schedulers.Schedulers;
 
 public class DetailedProfileActivity extends ActionBarActivity {
     @InjectView(R.id.detail_profile_list)RecyclerView list;
-    @InjectView(R.id.detail_profile_name) TextView name;
+    @InjectView(R.id.detailed_profile_name) TextView name;
     @InjectView(R.id.follow_button) Button follow_button;
-    @InjectView(R.id.detailed_profile_refresh)
-    SwipeRefreshLayout refresh;
+    @InjectView(R.id.detailed_profile_refresh) SwipeRefreshLayout refresh;
+    @InjectView(R.id.detailed_profile_picture) ImageView profile_pic;
+    @InjectView(R.id.profile_cardView) CardView profile_cardView;
     PostAdapter adapter;
 
     String user_id;
@@ -69,18 +98,29 @@ public class DetailedProfileActivity extends ActionBarActivity {
             setFollowing();
         }
 
-
-
-
         ParseQuery<ParseUser> queryUsers = ParseQuery.getQuery(ParseUser.class);
         queryUsers.getInBackground(user_id, new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 name.setText(parseUser.getString("firstName") + " " + parseUser.getString("lastName"));
+                Picasso.with(getApplicationContext()).load("https://graph.facebook.com/" + parseUser.get("facebook_id") + "/picture?type=large").transform(new CircleTransform()).into(profile_pic);
+                String url = "https://graph.facebook.com/" + parseUser.get("facebook_id") + "?fields=cover&access_token=" + ParseFacebookUtils.getSession().getAccessToken();
+                new CoverPhotoTask(url).execute();
             }
         });
+        requestCoverPhoto();
         getPosts();
 
+    }
+
+    private void requestCoverPhoto() {
+        ParseFacebookUtils.initialize(getString(R.string.applicationId));
+        Request.newMeRequest(ParseFacebookUtils.getSession(), new Request.GraphUserCallback() {
+            @Override
+            public void onCompleted(GraphUser graphUser, Response response) {
+                Log.i("NECESSARY", graphUser.getInnerJSONObject().toString());
+            }
+        }).executeAsync();
     }
 
     private List<ParseObject> getUserPosts(String id){
@@ -186,5 +226,44 @@ public class DetailedProfileActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class CoverPhotoTask extends AsyncTask<Void, Void, String> {
+
+        private String url;
+
+        public CoverPhotoTask(String url) {
+            this.url = url;
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            try {
+                return JSONReaderCoverPhoto.read(this.url);
+            } catch (Exception e) {
+                // TODO: handle exception
+                Log.i("ERROR IN JSON READ", e.toString());
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s == null) {
+                Log.d("ERROR WITH COVER PHOTO", "ERROR");
+                return;
+            }
+            super.onPostExecute(s);
+//            profile_cardView.setCardBackgroundColor(getResources().getColor(android.R.color.transparent));
+//            profile_cardView.setRadius(50);
+//            profile_cardView.setBackground(getResources().getDrawable(R.drawable.profile_pic_placeholder));
+//            ImageView imageView = (ImageView) findViewById(R.id.im);
+//            Picasso.with(getApplicationContext()).load(s).into(imageView);
+//            LinearLayout layout = (LinearLayout) findViewById(R.id.activity_detailed_profile_layout);
+//            Log.i("IMAGE VIEW", imageView.getDrawable().toString());
+//            layout.setBackground(imageView.getDrawable());
+//            profile_cardView.setBackgroundDrawable(imageView.getDrawable());
+        }
     }
 }
