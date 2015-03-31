@@ -92,24 +92,6 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
-        /** Get the action view of the menu item whose id is search */
-//        View v = (View) menu.findItem(R.id.searchPerson).getActionView();
-
-        /** Get the edit text from the action view */
-//        search_bar = ( EditText ) v.findViewById(R.id.editText_person_search);
-
-        /** Setting an action listener */
-//        search_bar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//
-//            @Override
-//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-//                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search_bar.getWindowToken(), 0);
-//                Intent intent = new Intent(getApplicationContext(), SearchActivity.class); new Intent();
-//                intent.putExtra("user_name", v.getText().toString());
-//                startActivity(intent);
-//                return false;
-//            }
-//        });
         return true;
     }
 

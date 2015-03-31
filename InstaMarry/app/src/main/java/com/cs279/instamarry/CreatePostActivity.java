@@ -1,5 +1,6 @@
 package com.cs279.instamarry;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,11 +50,11 @@ public class CreatePostActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
         ButterKnife.inject(this);
-        Log.d("TEST", "TEST");
         bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
                 Intent galleryIntent = new Intent(
                         Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -63,6 +65,7 @@ public class CreatePostActivity extends ActionBarActivity {
         buttonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
                 createPost();
             }
         });
@@ -74,6 +77,8 @@ public class CreatePostActivity extends ActionBarActivity {
                 return true;
             }
         });
+        editTitle.requestFocus();
+        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void createPost(){
@@ -123,6 +128,8 @@ public class CreatePostActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != ProfileActivity.RESULT_CANCELED) {
             if (requestCode == RESULT_GALLERY) {
+                editTitle.requestFocus();
+                ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                 Uri selectedImage = data.getData();
                 Picasso.with(getApplicationContext()).load(selectedImage).into(imageView);
                 try {

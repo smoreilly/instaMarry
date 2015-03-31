@@ -74,7 +74,6 @@ public class DetailedProfileActivity extends ActionBarActivity {
     @InjectView(R.id.follow_button) Button follow_button;
     @InjectView(R.id.detailed_profile_refresh) SwipeRefreshLayout refresh;
     @InjectView(R.id.detailed_profile_picture) ImageView profile_pic;
-//    @InjectView(R.id.profile_cardView) CardView profile_cardView;
     PostAdapter adapter;
 
     String user_id;
@@ -259,7 +258,6 @@ public class DetailedProfileActivity extends ActionBarActivity {
             ImageView imageView = (ImageView) findViewById(R.id.detailed_profile_imageView);
             Point point = new Point();
             getWindowManager().getDefaultDisplay().getSize(point);
-            LinearLayout layout = (LinearLayout) findViewById(R.id.activity_detailed_profile_layout);
             Picasso.with(getApplicationContext()).load(s).resize(point.x, imageView.getHeight()).into(imageView);
         }
     }
