@@ -1,6 +1,7 @@
 package com.cs279.instamarry;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -39,7 +40,6 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
         viewPager = (ViewPager) findViewById(R.id.pager);
             actionBar = getSupportActionBar();
         mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
-
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
