@@ -30,15 +30,26 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
+                android:nextFocusDown="@+id/editTextDescription"
                 android:hint="Title"
                 android:id="@+id/editTitle"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <requestFocus />
+            </EditText>
+
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Description"
+                android:imeOptions="actionDone"
+                android:singleLine="true"
+                android:imeActionLabel="Post"
                 android:layout_below="@id/editTitle"
                 android:id="@+id/editTextDescription"
                 android:layout_alignParentLeft="true"
