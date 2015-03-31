@@ -57,7 +57,7 @@ public class DetailedProfileActivity extends ActionBarActivity {
         ButterKnife.inject(this);
         user_id = getIntent().getStringExtra("id");
         refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
-        refresh.setOnRefreshListener(()-> getPosts());
+        refresh.setOnRefreshListener(this::getPosts);
 
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setItemAnimator(new DefaultItemAnimator());

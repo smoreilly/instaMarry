@@ -58,7 +58,7 @@ public class FragmentPersonalTab extends Fragment {
         ButterKnife.inject(this, v);
 
         refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
-        refresh.setOnRefreshListener(()-> update());
+        refresh.setOnRefreshListener(this::update);
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         list.setItemAnimator(new DefaultItemAnimator());
         update();
