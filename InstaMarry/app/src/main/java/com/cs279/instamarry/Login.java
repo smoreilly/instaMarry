@@ -37,6 +37,7 @@ public class Login extends Activity {
             }
         });
         authButton.setBackgroundColor(getResources().getColor(R.color.OpaqueFacebookBlue));
+        authButton.setTextSize(20);
     }
 
     public void facebookLogin(final View v){
