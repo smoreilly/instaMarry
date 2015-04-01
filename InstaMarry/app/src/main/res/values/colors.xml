@@ -4,4 +4,5 @@
     <color name="DarkColor">#4527A0</color>
     <color name="AccentColor">#9575CD</color>
     <color name="OpaqueFacebookBlue">#A0758AB6</color>
+    <color name="red">#FF0000</color>
 </resources>
