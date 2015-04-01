@@ -41,6 +41,7 @@ public class FragmentExploreTab extends Fragment {
     private List<Post> explorePosts;
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,15 +50,14 @@ public class FragmentExploreTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_explore_tab_layout, container, false);
         ButterKnife.inject(this, v);
         refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
 
         refresh.setOnRefreshListener(this::update);
-
         list.setLayoutManager(new LinearLayoutManager(getActivity()));
         list.setItemAnimator(new DefaultItemAnimator());
+
         update();
         return v;
     }
