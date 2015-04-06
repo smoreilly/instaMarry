@@ -70,7 +70,6 @@ import rx.schedulers.Schedulers;
 
 public class DetailedProfileActivity extends ActionBarActivity {
     @InjectView(R.id.detail_profile_list)RecyclerView list;
-    @InjectView(R.id.detailed_profile_name) TextView name;
     @InjectView(R.id.follow_button) Button follow_button;
     @InjectView(R.id.detailed_profile_refresh) SwipeRefreshLayout refresh;
     @InjectView(R.id.detailed_profile_picture) ImageView profile_pic;
@@ -84,6 +83,7 @@ public class DetailedProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_profile);
         ButterKnife.inject(this);
+        follow_button.bringToFront();
         user_id = getIntent().getStringExtra("id");
         refresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
         refresh.setOnRefreshListener(this::getPosts);
@@ -102,7 +102,7 @@ public class DetailedProfileActivity extends ActionBarActivity {
         queryUsers.getInBackground(user_id, new GetCallback<ParseUser>() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
-                name.setText(parseUser.getString("firstName") + " " + parseUser.getString("lastName"));
+                setTitle(parseUser.getString("firstName") + " " + parseUser.getString("lastName"));
                 Picasso.with(getApplicationContext()).load("https://graph.facebook.com/" + parseUser.get("facebook_id") + "/picture?type=large").transform(new CircleTransform()).into(profile_pic);
                 String url = "https://graph.facebook.com/" + parseUser.get("facebook_id") + "?fields=cover&access_token=" + ParseFacebookUtils.getSession().getAccessToken();
                 new CoverPhotoTask(url).execute();
