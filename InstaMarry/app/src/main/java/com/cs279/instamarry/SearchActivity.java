@@ -61,7 +61,6 @@ public class SearchActivity extends ActionBarActivity {
     private List<String> names;
     private List<ParseUser> usersList;
     private String searched_text;
-    private LazyAdapter adapter;
     private String searched_person_object_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -12,6 +12,9 @@
         android:title="edit"
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_edit"/>
-
+    <item android:id="@+id/add"
+        android:title="add"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_add" />
 
 </menu>

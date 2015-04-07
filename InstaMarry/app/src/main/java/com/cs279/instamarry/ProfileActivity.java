@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,8 +36,13 @@ public class ProfileActivity extends ActionBarActivity implements ActionBar.TabL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        //Set logo
+//        getSupportActionBar().setDisplayUseLogoEnabled(true);
         // Initialization
+        getSupportActionBar().setLogo(R.drawable.ideal_logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ideal_logo);
+        getSupportActionBar().setHomeButtonEnabled(true);
         viewPager = (ViewPager) findViewById(R.id.pager);
             actionBar = getSupportActionBar();
         mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
