@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="MainColor">#673AB7</color>
+    <color name="AccentColor">#673AB7</color>
     <color name="DarkColor">#4527A0</color>
-    <color name="AccentColor">#9575CD</color>
+    <color name="MainColor">#9575CD</color>
+    <color name="OpaqueFacebookBlue">#A0758AB6</color>
+    <color name="red">#FF0000</color>
 </resources>

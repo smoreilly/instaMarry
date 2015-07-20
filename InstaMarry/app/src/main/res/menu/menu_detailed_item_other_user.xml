@@ -4,14 +4,6 @@
     tools:context="com.cs279.instamarry.DetailedItem">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/deletePost"
-        android:title="add"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_delete" />
-    <item android:id="@+id/editPost"
-        android:title="edit"
-        app:showAsAction="ifRoom"
-        android:icon="@android:drawable/ic_menu_edit"/>
     <item android:id="@+id/add"
         android:title="add"
         app:showAsAction="ifRoom"

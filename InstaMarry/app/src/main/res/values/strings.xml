@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">InstaMarry</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">ideal</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_detailed_item">DetailedItem</string>
-
+    <string name="title_activity_create_post">CreatePost</string>
+    <string name="app_id">1574501699459233</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="applicationId">RqmsoL9ivWpicFS1H3ClO9VWUiPr1XmwLzJoLGRp</string>
+    <string name="title_activity_detailed_profile">DetailedProfileActivity</string>
+    <string name="com_facebook_loginview_log_in_button">Log in with Facebook</string>
+    <string name="com_facebook_loginview_log_out_button">Logout</string>
 </resources>
